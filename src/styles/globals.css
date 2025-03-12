@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import "nes.css/css/nes.min.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 20, 20, 40;
+  --pixel-border: #ffffff;
+  --neon-glow: 0 0 5px #4f46e5, 0 0 20px #4f46e5, 0 0 40px #4f46e5;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  font-family: 'Press Start 2P', system-ui;
+}
+
+@layer components {
+  .pixel-border {
+    @apply border-2 border-[#ffffff] relative p-1;
+    image-rendering: pixelated;
+  }
+
+  .pixel-border::after {
+    content: '';
+    @apply absolute -top-1 -left-1 -right-1 -bottom-1 bg-transparent border-2 border-[#ffffff] -z-10;
+  }
+
+  .neon-text {
+    @apply text-white;
+    text-shadow: var(--neon-glow);
+  }
+
+  .game-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    min-height: calc(100vh - 4rem);
+  }
+
+  .pixel-button {
+    @apply px-4 py-2 bg-indigo-600 text-white transition-all duration-200 ease-in-out;
+    image-rendering: pixelated;
+  }
+
+  .pixel-button:hover {
+    @apply bg-indigo-700 -translate-y-0.5;
+    box-shadow: var(--neon-glow);
+  }
+
+  .menu-item {
+    @apply px-4 py-2 transition-all duration-200;
+  }
+
+  .menu-item:hover {
+    @apply bg-indigo-600 scale-105;
+    box-shadow: var(--neon-glow);
+  }
+}
+
+@media (min-width: 640px) {
+  .game-container {
+    @apply px-6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-container {
+    @apply px-8;
+  }
+}
