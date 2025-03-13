@@ -1,27 +1,19 @@
-"use client"
+'use client';
 
 import { NextUIProvider } from "@nextui-org/react";
-import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet } from "wagmi/chains";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const config = createConfig({
-  chains: [mainnet],
-  transports: {
-    [mainnet.id]: http(),
-  },
-});
-
-const queryClient = new QueryClient();
+import { WagmiConfig } from "wagmi";
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import {chains, config} from '@/config/web3';
+import '@rainbow-me/rainbowkit/styles.css';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
+    <WagmiConfig config={config}>
+      <RainbowKitProvider chains={chains} modalSize="compact">
         <NextUIProvider>
           {children}
         </NextUIProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+      </RainbowKitProvider>
+    </WagmiConfig>
   );
 }

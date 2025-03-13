@@ -12,27 +12,22 @@ export const personalInfo: PersonalInfo = {
     zh: '全栈开发者，专注于区块链技术和游戏开发。热衷于探索新技术，创造有趣的应用。'
   },
   avatar: '/avatar.png',
-  email: 'your-email@example.com', // 请替换为您的邮箱
-  location: '中国',
+  email: '0xja.eth@gmail.com', // 请替换为您的邮箱
+  location: 'China',
   socialLinks: [
     {
       platform: 'GitHub',
-      url: 'https://github.com/yourusername',
+      url: 'https://github.com/0xja-eth',
       icon: GithubLogo
     },
     {
       platform: 'Twitter',
-      url: 'https://twitter.com/yourusername',
+      url: 'https://x.com/JXiaoLoong',
       icon: TwitterLogo
     },
     {
-      platform: 'Website',
-      url: 'https://your-website.com',
-      icon: Globe
-    },
-    {
       platform: 'Email',
-      url: 'mailto:your-email@example.com',
+      url: 'mailto:0xja.eth@gmail.com',
       icon: EnvelopeSimple
     }
   ]

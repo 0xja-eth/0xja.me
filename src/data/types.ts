@@ -12,20 +12,41 @@ export interface Skill {
 }
 
 export interface Project {
-  title: LocalizedText;
-  description: LocalizedText;
+  title: {
+    en: string;
+    zh: string;
+  };
+  description: {
+    en: string;
+    zh: string;
+  };
   imageUrl: string;
   techStack: string[];
   githubUrl?: string;
   demoUrl?: string;
-  category?: string;
-  featured?: boolean;
-  startDate?: string;
-  endDate?: string;
+  category: ProjectCategory;
+  featured: boolean;
+  startDate: string;
+  endDate: string;
+}
+
+export type ProjectCategory = 'Gaming' | 'DeFi' | 'Web3' | 'AI' | 'Tool';
+
+export interface ProjectCategoryInfo {
+  name: {
+    en: string;
+    zh: string;
+  };
+  icon: string;
+  color: string;
+  description: {
+    en: string;
+    zh: string;
+  };
 }
 
 export interface Chain {
-  name: LocalizedText;
+  name: string;
   icon: string | null;
   url: string;
   color: string;

@@ -31,7 +31,7 @@ body {
 
   .pixel-border::after {
     content: '';
-    @apply absolute -top-1 -left-1 -right-1 -bottom-1 bg-transparent border-2 border-[#ffffff] -z-10;
+    /*@apply absolute -top-1 -left-1 -right-1 -bottom-1 bg-transparent border-2 border-[#ffffff] -z-10;*/
   }
 
   .neon-text {
@@ -62,6 +62,156 @@ body {
     @apply bg-indigo-600 scale-105;
     box-shadow: var(--neon-glow);
   }
+}
+
+/* 像素风格按钮 */
+.pixel-button {
+  position: relative;
+  padding: 0.5rem 1rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.75rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 4px 0 rgba(0, 0, 0, 0.2),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 rgba(0, 0, 0, 0.2),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.pixel-button:active {
+  transform: translateY(2px);
+  box-shadow: 
+    0 2px 0 rgba(0, 0, 0, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 像素风格输入框 */
+.pixel-input {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: white;
+  transition: all 0.2s;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 0 2px transparent;
+}
+
+.pixel-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.pixel-input::-webkit-inner-spin-button,
+.pixel-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pixel-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* 状态栏动画 */
+.status-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.status-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 添加新的动画效果 */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(168, 85, 247, 0.05) 50%,
+      transparent 100%
+    );
+    transform: translateY(-100%);
+  }
+  100% {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(168, 85, 247, 0.05) 50%,
+      transparent 100%
+    );
+    transform: translateY(100%);
+  }
+}
+
+@keyframes scan-y {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-scan-line {
+  animation: scan-line 4s linear infinite;
+}
+
+.animate-scan-y {
+  animation: scan-y 2s linear infinite;
 }
 
 @media (min-width: 640px) {

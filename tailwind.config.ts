@@ -16,6 +16,9 @@ const config: Config = {
       animation: {
         'pixel-pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'spin-slow': 'spin 8s linear infinite',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'light-beam': 'light-beam 3s linear infinite',
+        'shimmer': 'shimmer 4s ease-in-out infinite',
       },
       keyframes: {
         spin: {
@@ -25,6 +28,23 @@ const config: Config = {
           to: {
             transform: 'rotate(360deg)',
           },
+        },
+        'light-beam': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        'shimmer': {
+          '0%': { transform: 'translateX(-100%)', opacity: '0' },
+          '10%': { opacity: '0.1' },
+          '20%': { opacity: '0.2' },
+          '30%': { opacity: '0.3' },
+          '40%': { opacity: '0.4' },
+          '50%': { opacity: '0.5' },
+          '60%': { opacity: '0.4' },
+          '70%': { opacity: '0.3' },
+          '80%': { opacity: '0.2' },
+          '90%': { opacity: '0.1' },
+          '100%': { transform: 'translateX(100%)', opacity: '0' },
         },
       },
       screens: {

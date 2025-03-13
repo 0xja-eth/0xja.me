@@ -2,10 +2,7 @@ import { Chain } from './types';
 
 export const chains: Chain[] = [
   {
-    name: {
-      en: 'Bitcoin',
-      zh: '比特币'
-    },
+    name: 'Bitcoin',
     icon: '/chains/btc.svg',
     url: 'https://bitcoin.org',
     color: '#F7931A',
@@ -30,10 +27,7 @@ export const chains: Chain[] = [
     ]
   },
   {
-    name: {
-      en: 'Ethereum',
-      zh: '以太坊'
-    },
+    name: 'Ethereum',
     icon: '/chains/eth.svg',
     url: 'https://ethereum.org',
     color: '#627EEA',
@@ -58,10 +52,7 @@ export const chains: Chain[] = [
     ]
   },
   {
-    name: {
-      en: 'zkSync',
-      zh: 'zkSync'
-    },
+    name: 'zkSync',
     icon: '/chains/zksync.svg',
     url: 'https://zksync.io',
     color: '#8C8DFC',
@@ -73,10 +64,7 @@ export const chains: Chain[] = [
     position: { x: 60, y: 20 }
   },
   {
-    name: {
-      en: 'Base',
-      zh: 'Base'
-    },
+    name: 'Base',
     icon: '/chains/base.svg',
     url: 'https://base.org',
     color: '#0052FF',
@@ -88,10 +76,7 @@ export const chains: Chain[] = [
     position: { x: 75, y: 40 }
   },
   {
-    name: {
-      en: 'Zircuit',
-      zh: 'Zircuit'
-    },
+    name: 'Zircuit',
     icon: null,
     url: 'https://zircuit.com',
     color: '#FF4D4D',
@@ -103,10 +88,7 @@ export const chains: Chain[] = [
     position: { x: 25, y: 60 }
   },
   {
-    name: {
-      en: 'Solana',
-      zh: '索拉纳'
-    },
+    name: 'Solana',
     icon: '/chains/solana.svg',
     url: 'https://solana.com',
     color: '#14F195',
@@ -118,10 +100,7 @@ export const chains: Chain[] = [
     position: { x: 45, y: 70 }
   },
   {
-    name: {
-      en: 'Aptos',
-      zh: 'Aptos'
-    },
+    name: 'Aptos',
     icon: '/chains/aptos.svg',
     url: 'https://aptoslabs.com',
     color: '#2DD8A7',
@@ -133,10 +112,7 @@ export const chains: Chain[] = [
     position: { x: 65, y: 65 }
   },
   {
-    name: {
-      en: 'Sui',
-      zh: 'Sui'
-    },
+    name: 'Sui',
     icon: '/chains/sui.svg',
     url: 'https://sui.io',
     color: '#6FBCF0',
@@ -148,10 +124,7 @@ export const chains: Chain[] = [
     position: { x: 80, y: 75 }
   },
   {
-    name: {
-      en: 'CKB',
-      zh: 'CKB'
-    },
+    name: 'CKB',
     icon: null,
     url: 'https://www.nervos.org',
     color: '#3CC68A',
@@ -163,10 +136,7 @@ export const chains: Chain[] = [
     position: { x: 30, y: 85 }
   },
   {
-    name: {
-      en: 'Cosmos',
-      zh: '科斯魔斯'
-    },
+    name: 'Cosmos',
     icon: '/chains/cosmos.svg',
     url: 'https://cosmos.network',
     color: '#2E3148',
@@ -178,10 +148,7 @@ export const chains: Chain[] = [
     position: { x: 50, y: 50 }
   },
   {
-    name: {
-      en: 'Celestia',
-      zh: 'Celestia'
-    },
+    name: 'Celestia',
     icon: '/chains/celestia.svg',
     url: 'https://celestia.org',
     color: '#7B2BF9',
@@ -193,10 +160,7 @@ export const chains: Chain[] = [
     position: { x: 70, y: 45 }
   },
   {
-    name: {
-      en: 'Sonic',
-      zh: 'Sonic'
-    },
+    name: 'Sonic',
     icon: null,
     url: 'https://sonic.ooo',
     color: '#FF6B4A',

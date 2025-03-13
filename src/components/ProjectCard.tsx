@@ -42,12 +42,17 @@ export default function ProjectCard({
           className="object-cover transition-transform hover:scale-110"
         />
       </div>
-      <h3 className="text-xl font-bold mb-2">{title[language]}</h3>
-      <p className="text-gray-400 mb-4 flex-grow">{description[language]}</p>
+      <h3 className="text-xl font-bold mb-2 font-pixel">{title[language]}</h3>
+      <p className="text-gray-400 mb-4 flex-grow" style={{
+        fontFamily: '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif',
+        fontSize: '1rem',
+        lineHeight: '1.75',
+        letterSpacing: '0.025em'
+      }}>{description[language]}</p>
       
       <div className="space-y-4">
         <div>
-          <h4 className="text-sm font-bold mb-2">{translations.techStack}</h4>
+          <h4 className="text-sm font-bold mb-2 font-pixel">{translations.techStack}</h4>
           <div className="flex flex-wrap gap-2">
             {techStack.map((tech) => (
               <span

@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import ProjectCard from "@/components/ProjectCard";
+import ProjectFinder from "@/components/ProjectFinder";
 import ChainMap from "@/components/ChainMap";
 import DynamicBackground from "@/components/DynamicBackground";
+import CharacterStats from "@/components/CharacterStats";
 import { personalInfo } from "@/data/personal";
-import { skills } from "@/data/skills";
 import { projects } from "@/data/projects";
 import { useLanguage } from "@/i18n/context";
 
@@ -70,6 +70,16 @@ export default function Home() {
           </motion.div>
         </section>
 
+        {/* Character Stats Section */}
+        <section className="py-20 px-4">
+          <h2 className="text-2xl md:text-3xl text-center neon-text mb-12">
+            {t.stats.title}
+          </h2>
+          <div className="max-w-5xl mx-auto">
+            <CharacterStats />
+          </div>
+        </section>
+
         {/* Chain Map Section */}
         <section className="py-20 px-4">
           <h2 className="text-2xl md:text-3xl text-center neon-text mb-4">
@@ -83,66 +93,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Skills Section */}
-        <section className="py-20 px-4">
-          <h2 className="text-2xl md:text-3xl text-center neon-text mb-12">
-            {t.skills.title}
-          </h2>
-          <div className="max-w-3xl mx-auto grid gap-8">
-            {skills.map((skill, index) => {
-              const Icon = skill.icon;
-              return (
-                <motion.div
-                  key={skill.name[language]}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.2 }}
-                  className="pixel-border p-4 backdrop-blur-sm bg-gray-900/30"
-                >
-                  <div className="flex items-center gap-4 mb-2">
-                    <Icon size={24} />
-                    <h3 className="text-lg">
-                      {t.skills.categories[skill.category as keyof typeof t.skills.categories] || skill.name[language]}
-                    </h3>
-                  </div>
-                  <div className="h-4 bg-gray-700 pixel-border">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${skill.level}%` }}
-                      transition={{ duration: 1, delay: index * 0.2 }}
-                      className="h-full bg-indigo-600"
-                    />
-                  </div>
-                  <span className="text-sm text-gray-400 mt-1 block">
-                    {t.skills.levelPrefix} {skill.level}/100
-                  </span>
-                  {skill.description && (
-                    <p className="text-sm text-gray-400 mt-2">{skill.description[language]}</p>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </section>
-
         {/* Projects Section */}
         <section className="py-20 px-4 bg-gradient-to-b from-transparent to-gray-900/50">
           <h2 className="text-2xl md:text-3xl text-center neon-text mb-12">
             {t.projects.title}
           </h2>
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.filter(p => p.featured).map((project, index) => (
-              <ProjectCard 
-                key={project.title[language]}
-                {...project} 
-                index={index}
-                translations={{
-                  viewDemo: t.projects.viewDemo,
-                  viewGithub: t.projects.viewGithub,
-                  techStack: t.projects.techStack
-                }}
-              />
-            ))}
+          <div className="max-w-6xl mx-auto">
+            <ProjectFinder 
+              projects={projects}
+              translations={{
+                viewDemo: t.projects.viewDemo,
+                viewGithub: t.projects.viewGithub,
+                techStack: t.projects.techStack
+              }}
+            />
           </div>
         </section>
       </div>
