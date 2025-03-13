@@ -1,26 +1,14 @@
-'use client';
-
 import { getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { configureChains, createConfig } from 'wagmi';
-import { mainnet, base, arbitrum, optimism } from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
 
-// 配置支持的链
-export const chains = [mainnet, base, arbitrum, optimism];
+export type TokenSymbols = keyof typeof TOKEN_ADDRESSES
 
-const { chains: configuredChains, publicClient } = configureChains(
-  chains,
-  [publicProvider()]
-);
+// Base 链上的代币合约地址
+export const TOKEN_ADDRESSES = {
+  ETH: '0x0000000000000000000000000000000000000000', // ETH 原生代币
+  USDT: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
+  USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+  WBTC: '0x236aa50979D5f3De3Bd1Eeb40E81137F22ab794b'
+} as const;
 
-const { connectors } = getDefaultWallets({
-  appName: '0xJA.eth',
-  projectId: 'a41b88209221382ffe588d812d5e6201', // 如果需要 WalletConnect，填入项目 ID
-  chains: configuredChains,
-});
-
-export const config = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-});
+// 打赏合约地址
+export const TIP_CONTRACT_ADDRESS = '0x...'; // 替换为您的合约地址

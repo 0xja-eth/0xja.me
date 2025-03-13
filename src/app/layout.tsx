@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Press_Start_2P } from 'next/font/google';
 import "@/styles/globals.css";
+import '@rainbow-me/rainbowkit/styles.css';
 import { LanguageProvider } from '@/i18n/context';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Navigation from "@/components/Navigation";
@@ -23,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={pressStart2P.className}>
         <Providers>
           <LanguageProvider>
