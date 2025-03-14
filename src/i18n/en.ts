@@ -17,7 +17,7 @@ export const en = {
     description: 'Explore my journey across different blockchains. Each node represents a blockchain ecosystem I\'ve deeply explored and developed in. Click on nodes for details!'
   },
   projects: {
-    title: "0xJA's Finder",
+    title: "0xJA.eth's Finder",
     viewDemo: 'View Demo',
     viewGithub: 'View Code',
     techStack: 'Tech Stack'
