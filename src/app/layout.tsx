@@ -23,6 +23,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "0xJA.eth - Web3 Developer & Gaming Enthusiast",
   description: "Web3 developer focused on blockchain technology and game development",
+  icons: {
+    icon: '/avatar.png',
+    shortcut: '/avatar.png',
+    apple: '/avatar.png',
+  },
 };
 
 export default function RootLayout({
