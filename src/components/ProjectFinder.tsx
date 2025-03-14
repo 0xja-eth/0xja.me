@@ -486,7 +486,7 @@ Available commands:
 
               {/* Project Content - Scrollable */}
               <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-300px)] scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50">
-                <p className="font-sans text-gray-300 text-lg leading-relaxed">
+                <p className="font-sans text-gray-300 text-lg leading-relaxed whitespace-pre-line">
                   {selectedProject.description[language]}
                 </p>
 
