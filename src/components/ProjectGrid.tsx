@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Project, ProjectCategory } from '@/data/types';
-import { categories } from '@/data/categories';
+import { projectCategories } from '@/data/categories';
 import { useLanguage } from '@/i18n/context';
 import Image from 'next/image';
 
@@ -37,7 +37,7 @@ export default function ProjectGrid({ projects, translations }: ProjectGridProps
         >
           🌟 {language === 'en' ? 'All Projects' : '全部项目'}
         </button>
-        {Object.entries(categories).map(([key, category]) => (
+        {Object.entries(projectCategories).map(([key, category]) => (
           <button
             key={key}
             onClick={() => setSelectedCategory(key as ProjectCategory)}
@@ -57,7 +57,7 @@ export default function ProjectGrid({ projects, translations }: ProjectGridProps
           animate={{ opacity: 1, y: 0 }}
           className="text-center text-gray-400 max-w-2xl mx-auto"
         >
-          {categories[selectedCategory].description[language]}
+          {projectCategories[selectedCategory].description[language]}
         </motion.div>
       )}
 
@@ -80,9 +80,9 @@ export default function ProjectGrid({ projects, translations }: ProjectGridProps
                 {/* Category Badge */}
                 <div 
                   className="absolute top-2 right-2 z-20 px-2 py-1 rounded-full text-sm font-pixel"
-                  style={{ backgroundColor: categories[project.category].color + '80' }}
+                  style={{ backgroundColor: projectCategories[project.category].color + '80' }}
                 >
-                  {categories[project.category].icon}
+                  {projectCategories[project.category].icon}
                 </div>
 
                 {/* Project Image */}

@@ -8,6 +8,7 @@ import DynamicBackground from "@/components/DynamicBackground";
 import CharacterStats from "@/components/CharacterStats";
 import { personalInfo } from "@/data/personal";
 import { projects } from "@/data/projects";
+import { blogs } from "@/data/blogs";
 import { useLanguage } from "@/i18n/context";
 
 export default function Home() {
@@ -96,11 +97,12 @@ export default function Home() {
         {/* Projects Section */}
         <section className="py-20 px-4 bg-gradient-to-b from-transparent to-gray-900/50">
           <h2 className="text-2xl md:text-3xl text-center neon-text mb-12">
-            {t.projects.title}
+            0xJA.eth's Finder
           </h2>
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <ProjectFinder 
               projects={projects}
+              blogs={blogs}
               translations={{
                 viewDemo: t.projects.viewDemo,
                 viewGithub: t.projects.viewGithub,

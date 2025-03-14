@@ -14,8 +14,7 @@ export const projects: Project[] = [
     techStack: ["C++", "Game", "Console", "ASCII"],
     githubUrl: "https://gitee.com/jyanon/hkk",
     demoUrl: "https://www.bilibili.com/video/BV1DV411E7xp",
-    category: "Gaming",
-    featured: true,
+    category: "Game",
     startDate: "2018-04",
     endDate: "2018-05"
   },
@@ -32,8 +31,7 @@ export const projects: Project[] = [
     techStack: ["Unity", "C#", "Game", "Game Jam"],
     githubUrl: "https://github.com/0xja-eth/Wane-Wax",
     demoUrl: "https://www.bilibili.com/video/BV1Cy4y117Bw",
-    category: "Gaming",
-    featured: true,
+    category: "Game",
     startDate: "2021-01",
     endDate: "2021-01"
   },
@@ -50,8 +48,7 @@ export const projects: Project[] = [
     techStack: ["Unity", "C#", "Game", "Serious Game"],
     githubUrl: "https://github.com/0xja-eth/Exermon",
     demoUrl: "https://www.bilibili.com/video/BV1754y1G7CN",
-    category: "DeFi",
-    featured: true,
+    category: "Game",
     startDate: "2023-07",
     endDate: "2023-12"
   }

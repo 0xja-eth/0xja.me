@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Press_Start_2P } from 'next/font/google';
+import { Press_Start_2P, Inter } from 'next/font/google';
 import "@/styles/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { LanguageProvider } from '@/i18n/context';
@@ -11,6 +11,13 @@ const pressStart2P = Press_Start_2P({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
+  variable: '--font-pixel',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
 });
 
 export const metadata: Metadata = {
@@ -25,12 +32,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={pressStart2P.className}>
+      <body className={`${pressStart2P.variable} ${inter.variable}`}>
         <Providers>
           <LanguageProvider>
             <Navigation />
             <LanguageSwitch />
-            <main className="game-container">
+            <main className="game-container font-pixel">
               {children}
             </main>
           </LanguageProvider>

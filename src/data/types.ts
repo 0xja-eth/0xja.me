@@ -1,3 +1,5 @@
+import { blogCategories, projectCategories } from "./categories";
+
 export interface LocalizedText {
   en: string;
   zh: string;
@@ -12,37 +14,24 @@ export interface Skill {
 }
 
 export interface Project {
-  title: {
-    en: string;
-    zh: string;
-  };
-  description: {
-    en: string;
-    zh: string;
-  };
-  imageUrl: string;
-  techStack: string[];
-  githubUrl?: string;
-  demoUrl?: string;
+  title: LocalizedText;
+  description: LocalizedText;
   category: ProjectCategory;
-  featured: boolean;
+  techStack: string[];
   startDate: string;
   endDate: string;
+  demoUrl?: string;
+  githubUrl?: string;
+  imageUrl: string;
 }
 
-export type ProjectCategory = 'Gaming' | 'DeFi' | 'Web3' | 'AI' | 'Tool';
+export type ProjectCategory = keyof typeof projectCategories; // 'Gaming' | 'DeFi' | 'Web3' | 'AI' | 'Tool';
 
-export interface ProjectCategoryInfo {
-  name: {
-    en: string;
-    zh: string;
-  };
+export interface CategoryInfo {
+  name: LocalizedText;
   icon: string;
+  description: LocalizedText;
   color: string;
-  description: {
-    en: string;
-    zh: string;
-  };
 }
 
 export interface Chain {
@@ -52,10 +41,6 @@ export interface Chain {
   color: string;
   level?: number;
   description: LocalizedText;
-  position: {
-    x: number;
-    y: number;
-  };
   projects?: string[]; // 关联的项目标题列表
   achievements?: Achievement[];
 }
@@ -67,14 +52,17 @@ export interface Achievement {
   icon?: string;
 }
 
+export type BlogCategory = keyof typeof blogCategories; // 'GameFi' | 'DeFi' | 'Technology';
+
 export interface BlogPost {
   title: LocalizedText;
   slug: string;
   description: LocalizedText;
+  content?: LocalizedText;
   date: string;
   tags: string[];
-  category: string;
-  featured?: boolean;
+  blogUrl?: string;
+  category: BlogCategory;
   coverImage?: string;
 }
 
@@ -99,10 +87,7 @@ export interface Stat {
   value: number;
   icon: string;
   color: string;
-  description: {
-    en: string;
-    zh: string;
-  };
+  description: LocalizedText;
 }
 
 export interface Equipment {

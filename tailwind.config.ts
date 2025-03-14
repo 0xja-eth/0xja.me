@@ -55,7 +55,7 @@ const config: Config = {
         '2xl': '1536px',
       },
       fontFamily: {
-        sans: ['var(--font-noto)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         pixel: ['var(--font-pixel)', 'monospace'],
       },
     },
