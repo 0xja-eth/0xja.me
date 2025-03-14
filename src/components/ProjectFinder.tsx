@@ -317,13 +317,13 @@ Available commands:
                         {project.techStack.slice(0, view === 'grid' ? 3 : undefined).map((tech) => (
                           <span
                             key={tech}
-                            className="px-2 py-0.5 bg-gray-700/50 rounded-full text-xs font-sans"
+                            className="px-2 py-0.5 bg-gray-700/50 rounded-full text-sm font-sans"
                           >
                             {tech}
                           </span>
                         ))}
                         {view === 'grid' && project.techStack.length > 3 && (
-                          <span className="px-2 py-0.5 bg-gray-700/50 rounded-full text-xs font-sans">
+                          <span className="px-2 py-0.5 bg-gray-700/50 rounded-full text-sm font-sans">
                             +{project.techStack.length - 3}
                           </span>
                         )}
@@ -366,7 +366,7 @@ Available commands:
                         {blog.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="px-2 py-0.5 bg-gray-700/50 rounded-full text-xs font-sans"
+                            className="px-2 py-0.5 bg-gray-700/50 rounded-full text-sm font-sans"
                           >
                             {tag}
                           </span>
