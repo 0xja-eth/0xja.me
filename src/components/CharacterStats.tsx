@@ -1,48 +1,21 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { useLanguage } from "@/i18n/context";
-import { FiGift } from "react-icons/fi";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount, useBalance, useWriteContract } from 'wagmi';
 import { parseUnits } from 'ethers';
-import {TOKEN_ADDRESSES, TIP_CONTRACT_ADDRESS} from '@/config/web3';
-import {useAccount, useBalance, useWriteContract} from "wagmi";
-
-interface Stat {
-  name: string;
-  value: number;
-  icon: string;
-  color: string;
-  description: {
-    en: string;
-    zh: string;
-  };
-}
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { FiGift } from 'react-icons/fi';
+import { useLanguage } from "@/i18n/context";
+import { TOKEN_ADDRESSES, TIP_CONTRACT_ADDRESS } from '@/config/web3';
+import { RARITY_COLORS, equipments } from '@/data/equipment';
+import { Equipment, Stat } from '@/data/types';
+import { stats } from '@/data/personal';
 
 interface TokenOption {
   symbol: keyof typeof TOKEN_ADDRESSES;
   decimals: number;
-}
-
-interface Equipment {
-  id: string;
-  name: string;
-  type: 'weapon' | 'armor' | 'accessory';
-  icon: string;
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
-  stats: {
-    str?: number;
-    int?: number;
-    agi?: number;
-    dex?: number;
-    luk?: number;
-  };
-  description: {
-    en: string;
-    zh: string;
-  };
 }
 
 const TOKENS: TokenOption[] = [
@@ -51,200 +24,6 @@ const TOKENS: TokenOption[] = [
   { symbol: 'USDC', decimals: 6 },
   { symbol: 'WBTC', decimals: 8 }
 ];
-
-const equipments: Equipment[] = [
-  {
-    id: 'keyboard',
-    name: 'Mechanical Keyboard',
-    type: 'weapon',
-    icon: '⌨️',
-    rarity: 'epic',
-    stats: {
-      dex: 15,
-      agi: 10
-    },
-    description: {
-      en: 'A high-performance mechanical keyboard enhancing coding speed',
-      zh: '高性能机械键盘，提升编码速度'
-    }
-  },
-  {
-    id: 'ide',
-    name: 'Windsurf IDE',
-    type: 'armor',
-    icon: '🛡️',
-    rarity: 'legendary',
-    stats: {
-      int: 20,
-      dex: 10
-    },
-    description: {
-      en: 'The world\'s first agentic IDE powered by AI',
-      zh: '全球首个由AI驱动的智能IDE'
-    }
-  },
-  {
-    id: 'coffee',
-    name: 'Developer\'s Coffee',
-    type: 'accessory',
-    icon: '☕',
-    rarity: 'rare',
-    stats: {
-      str: 8,
-      int: 5
-    },
-    description: {
-      en: 'Essential companion for coding sessions',
-      zh: '编程必备的提神伴侣'
-    }
-  },
-  {
-    id: 'algorithm_book',
-    name: 'Algorithm Grimoire',
-    type: 'weapon',
-    icon: '📚',
-    rarity: 'epic',
-    stats: {
-      int: 18,
-      luk: 5
-    },
-    description: {
-      en: 'Ancient tome containing algorithmic wisdom',
-      zh: '蕴含算法智慧的古老魔典'
-    }
-  },
-  {
-    id: 'quantum_chip',
-    name: 'Quantum Processor',
-    type: 'accessory',
-    icon: '🔮',
-    rarity: 'legendary',
-    stats: {
-      int: 15,
-      agi: 12,
-      luk: 8
-    },
-    description: {
-      en: 'Harness quantum computing power',
-      zh: '驾驭量子计算之力'
-    }
-  },
-  {
-    id: 'debug_glasses',
-    name: 'Debug Specs',
-    type: 'armor',
-    icon: '👓',
-    rarity: 'rare',
-    stats: {
-      dex: 12,
-      int: 8
-    },
-    description: {
-      en: 'Enhance code analysis and bug detection',
-      zh: '增强代码分析和调试能力'
-    }
-  },
-  {
-    id: 'energy_drink',
-    name: 'Binary Boost',
-    type: 'accessory',
-    icon: '🥤',
-    rarity: 'common',
-    stats: {
-      agi: 8,
-      str: 5
-    },
-    description: {
-      en: 'Quick energy boost for coding sprints',
-      zh: '编程冲刺时的能量补充'
-    }
-  },
-  {
-    id: 'lucky_charm',
-    name: 'Debug Duck',
-    type: 'accessory',
-    icon: '🦆',
-    rarity: 'rare',
-    stats: {
-      luk: 15,
-      int: 5
-    },
-    description: {
-      en: 'Your faithful debugging companion',
-      zh: '忠实的调试伙伴'
-    }
-  }
-];
-
-const stats: Stat[] = [
-  { 
-    name: 'HP', 
-    value: 85, 
-    icon: '❤️', 
-    color: '#ff6b6b',
-    description: {
-      en: 'Endurance for project development and problem-solving',
-      zh: '项目开发和解决问题的耐力值，表示在高强度工作下的持久作战能力'
-    }
-  },
-  { 
-    name: 'Basic Dev', 
-    value: 90, 
-    icon: '💻', 
-    color: '#4dabf7',
-    description: {
-      en: 'Proficiency in fundamental programming and system design',
-      zh: '基础编程和系统设计能力，包括算法、数据结构和软件架构'
-    }
-  },
-  { 
-    name: 'Game Dev', 
-    value: 75, 
-    icon: '🎮', 
-    color: '#51cf66',
-    description: {
-      en: 'Experience in game development and interactive applications',
-      zh: '游戏开发和交互应用经验，专注于用户体验和游戏机制设计'
-    }
-  },
-  { 
-    name: 'Web3 Dev', 
-    value: 80, 
-    icon: '⛓️', 
-    color: '#845ef7',
-    description: {
-      en: 'Blockchain and decentralized application development skills',
-      zh: '区块链和去中心化应用开发技能，包括智能合约和DeFi系统'
-    }
-  },
-  { 
-    name: 'AI Dev', 
-    value: 70, 
-    icon: '🤖', 
-    color: '#ffd43b',
-    description: {
-      en: 'Artificial Intelligence and Machine Learning capabilities',
-      zh: '人工智能和机器学习能力，专注于AI应用开发和模型训练'
-    }
-  },
-  { 
-    name: 'Action', 
-    value: 95, 
-    icon: '⚡', 
-    color: '#ff922b',
-    description: {
-      en: 'Speed and efficiency in project execution and delivery',
-      zh: '项目执行和交付的速度与效率，体现快速行动和决策能力'
-    }
-  },
-];
-
-const RARITY_COLORS = {
-  common: '#95a5a6',
-  rare: '#3498db',
-  epic: '#9b59b6',
-  legendary: '#f1c40f'
-};
 
 export default function CharacterStats() {
   const { language } = useLanguage();
@@ -460,12 +239,12 @@ export default function CharacterStats() {
 
                   {/* Equipment Details Tooltip */}
                   {selectedEquipment?.id === equipment.id && (
-                    <div className="absolute left-full ml-2 w-64 p-3 rounded-lg bg-gray-900/95 border border-white/10 z-[60]">
+                    <div className="absolute left-full ml-2 w-96 p-3 rounded-lg bg-gray-900/95 border border-white/10 z-[60]">
                       <div className="flex items-start gap-2 mb-2">
                         <span className="text-xl">{equipment.icon}</span>
                         <div>
                           <h4 className="font-medium text-sm" style={{ color: RARITY_COLORS[equipment.rarity] }}>
-                            {equipment.name}
+                            {equipment.name[language]}
                           </h4>
                           <span className="text-xs text-gray-500 capitalize">{equipment.type}</span>
                         </div>
@@ -474,12 +253,12 @@ export default function CharacterStats() {
                         {equipment.description[language]}
                       </p>
                       <div className="space-y-1">
-                        {Object.entries(equipment.stats).map(([stat, value]) => (
-                          <div key={stat} className="flex items-center justify-between text-xs">
-                            <span className="uppercase text-gray-500">{stat}</span>
-                            <span className="text-green-400">+{value}</span>
+                        {equipment.stats.map((stat, id) => stat != 0 && (
+                            <div key={id} className="flex items-center justify-between text-xs">
+                            <span className="uppercase text-gray-500">{stats[id].name}</span>
+                            <span className="text-green-400">+{stat}</span>
                           </div>
-                        ))}
+                        )).filter(Boolean)}
                       </div>
                     </div>
                   )}

@@ -93,3 +93,24 @@ export interface PersonalInfo {
   location?: string;
   socialLinks: SocialLink[];
 }
+
+export interface Stat {
+  name: string;
+  value: number;
+  icon: string;
+  color: string;
+  description: {
+    en: string;
+    zh: string;
+  };
+}
+
+export interface Equipment {
+  id: string;
+  name: LocalizedText;
+  type: 'weapon' | 'armor' | 'accessory';
+  icon: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  stats: number[];
+  description: LocalizedText;
+}

@@ -265,7 +265,7 @@ export default function ChainMap() {
                 />
               </div>
               <div className="text-sm mt-1 text-gray-400">
-                Level {selectedChain.level}/100
+              {language === 'en' ? 'Proficiency' : '熟练度'} {selectedChain.level}/100
               </div>
             </div>
             <button
