@@ -32,14 +32,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${pressStart2P.variable} ${inter.variable}`}>
+      <body className={`${pressStart2P.variable} ${inter.variable} min-h-screen flex flex-col`}>
         <Providers>
           <LanguageProvider>
             <Navigation />
             <LanguageSwitch />
-            <main className="game-container font-pixel">
-              {children}
+            <main className="flex-1">
+              <div className="game-container">
+                {children}
+              </div>
             </main>
+            <footer className="text-center py-4 text-gray-600 text-sm font-sans bg-black/50 backdrop-blur-sm">
+              <span className="shine-text">🤩 95% made by Windsurf 🤩</span>
+            </footer>
           </LanguageProvider>
         </Providers>
       </body>

@@ -194,7 +194,7 @@ Available commands:
 
       <div className="flex divide-x divide-gray-700/50 h-[calc(100vh-300px)] min-h-[600px]">
         {/* Sidebar */}
-        <div className="w-64 flex-shrink-0 p-4 space-y-2 overflow-y-auto">
+        <div className="w-64 flex-shrink-0 p-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50">
           {/* Root Directory */}
           <button
             onClick={() => {
@@ -261,7 +261,7 @@ Available commands:
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-4 overflow-y-auto font-sans">
+        <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50">
           <div className={`grid gap-4 ${
             realView === 'grid' 
               ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
@@ -397,7 +397,7 @@ Available commands:
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: '33%', opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
-              className="w-1/3 flex-shrink-0 bg-black/50 backdrop-blur-sm overflow-hidden"
+              className="w-1/3 flex-shrink-0 bg-black/50 backdrop-blur-sm overflow-hidden scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50"
             >
               <div className="h-full flex flex-col">
                 <div className="flex-1 p-4 font-mono text-sm overflow-y-auto" ref={terminalRef}>
@@ -452,34 +452,24 @@ Available commands:
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-gray-900/90 backdrop-blur-md rounded-lg overflow-hidden max-w-5xl w-full"
-              onClick={(e) => e.stopPropagation()}
+              className="relative bg-gray-900/95 backdrop-blur-md rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden"
             >
-              <div className="relative aspect-video">
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white"
+              >
+                <FiX className="w-6 h-6" />
+              </button>
+
+              {/* Cover Image */}
+              <div className="relative h-[300px]">
                 <Image
                   src={selectedProject.imageUrl}
                   alt={selectedProject.title[language]}
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
-                
-                {/* Category Badge */}
-                <div 
-                  className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full text-sm font-pixel flex items-center gap-2"
-                  style={{ backgroundColor: projectCategories[selectedProject.category].color + '80' }}
-                >
-                  <span>{projectCategories[selectedProject.category].icon}</span>
-                  <span>{projectCategories[selectedProject.category].name[language]}</span>
-                </div>
-
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="absolute top-4 left-4 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70"
-                >
-                  <FiX />
-                </button>
 
                 {/* Project Title */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-gray-900 to-transparent font-sans font-bold">
@@ -487,16 +477,15 @@ Available commands:
                     {selectedProject.title[language]}
                   </h2>
                   <div className="flex items-center gap-4 text-sm text-gray-300">
-                    <span className="flex items-center gap-1">
-                      <span>{selectedProject.startDate}</span>
-                      <span>-</span>
-                      <span>{selectedProject.endDate}</span>
-                    </span>
+                    <span>{selectedProject.startDate} - {selectedProject.endDate}</span>
+                    <span>•</span>
+                    <span>{projectCategories[selectedProject.category].name[language]}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 space-y-6">
+              {/* Project Content - Scrollable */}
+              <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(90vh-300px)] scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50">
                 <p className="font-sans text-gray-300 text-lg leading-relaxed">
                   {selectedProject.description[language]}
                 </p>
@@ -515,25 +504,26 @@ Available commands:
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-4">
-                  {selectedProject.demoUrl && (
-                    <a
-                      href={selectedProject.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="pixel-button bg-indigo-600 hover:bg-indigo-700"
-                    >
-                      {translations.viewDemo}
-                    </a>
-                  )}
+                {/* Links */}
+                <div className="flex gap-4">
                   {selectedProject.githubUrl && (
                     <a
                       href={selectedProject.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-700 hover:bg-gray-600"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg font-sans"
                     >
-                      {translations.viewGithub}
+                      GitHub
+                    </a>
+                  )}
+                  {selectedProject.demoUrl && (
+                    <a
+                      href={selectedProject.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-sans"
+                    >
+                      Demo
                     </a>
                   )}
                 </div>
@@ -557,55 +547,61 @@ Available commands:
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-gray-900/90 backdrop-blur-md rounded-lg overflow-hidden max-w-5xl w-full"
-              onClick={(e) => e.stopPropagation()}
+              className="relative bg-gray-900/95 backdrop-blur-md rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden"
             >
-              <div className="relative aspect-video">
-                {selectedBlog.coverImage ? (
-                  <>
-                    <Image
-                      src={selectedBlog.coverImage}
-                      alt={selectedBlog.title[language]}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
-                  </>
-                ) : (
-                  <div className="absolute inset-0 bg-gray-800" />
-                )}
-                
-                {/* Category Badge */}
-                <div 
-                  className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full text-sm font-pixel flex items-center gap-2 bg-indigo-500/80"
-                >
-                  <span>{blogCategories[selectedBlog.category].icon}</span>
-                  <span>{blogCategories[selectedBlog.category].name[language]}</span>
-                </div>
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedBlog(null)}
+                className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white"
+              >
+                <FiX className="w-6 h-6" />
+              </button>
 
-                {/* Close Button */}
-                <button
-                  onClick={() => setSelectedBlog(null)}
-                  className="absolute top-4 left-4 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70"
-                >
-                  <FiX />
-                </button>
+              {/* Cover Image */}
+              {selectedBlog.coverImage && (
+                <div className="relative h-[300px]">
+                  <Image
+                    src={selectedBlog.coverImage}
+                    alt={selectedBlog.title[language]}
+                    fill
+                    className="object-cover"
+                  />
 
-                {/* Blog Title */}
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2 className="text-3xl font-sans font-medium mb-2">
-                    {selectedBlog.title[language]}
-                  </h2>
-                  <div className="flex items-center gap-4 text-sm text-gray-300">
-                    <span>{selectedBlog.date}</span>
+                  {/* Blog Title */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-gray-900 to-transparent font-sans font-bold">
+                    <h2 className="text-3xl mb-2">
+                      {selectedBlog.title[language]}
+                    </h2>
+                    <div className="flex items-center gap-4 text-sm text-gray-300">
+                      <span>{selectedBlog.date}</span>
+                      <span>•</span>
+                      <span>{blogCategories[selectedBlog.category].name[language]}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              <div className="p-6 space-y-6">
-                <p className="font-sans text-gray-300 text-lg leading-relaxed">
+              {/* Blog Content - Scrollable */}
+              <div className={`p-6 space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50 ${
+                selectedBlog.coverImage ? 'max-h-[calc(90vh-300px)]' : 'max-h-[90vh]'
+              }`}>
+                {!selectedBlog.coverImage && (
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{blogCategories[selectedBlog.category].icon}</span>
+                      <h2 className="text-3xl font-sans font-bold">
+                        {selectedBlog.title[language]}
+                      </h2>
+                    </div>
+                    <div className="text-sm text-gray-400 font-sans">
+                      {selectedBlog.date}
+                    </div>
+                  </div>
+                )}
+
+                <div className="font-sans text-gray-300 text-lg leading-relaxed">
                   {selectedBlog.description[language]}
-                </p>
+                </div>
 
                 <div>
                   <h3 className="font-sans font-medium text-lg mb-3">Tags</h3>
@@ -620,6 +616,20 @@ Available commands:
                     ))}
                   </div>
                 </div>
+
+                {/* Read More Link */}
+                {selectedBlog.blogUrl && (
+                  <div className="flex justify-end">
+                    <a
+                      href={selectedBlog.blogUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-sans"
+                    >
+                      {language === 'en' ? 'Read More' : '阅读更多'} →
+                    </a>
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>

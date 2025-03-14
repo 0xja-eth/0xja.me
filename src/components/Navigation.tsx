@@ -7,12 +7,12 @@ import { GameController, Code, User, Notebook, EnvelopeSimple } from "@phosphor-
 import ConnectWallet from './ConnectWallet';
 
 const menuItems = [
-  { href: "/", label: "Home", icon: User },
-  { href: "/projects", label: "Projects", icon: Code },
-  { href: "/gaming", label: "Gaming", icon: GameController },
-  { href: "/blog", label: "Blog", icon: Notebook },
-  { href: "/contact", label: "Contact", icon: EnvelopeSimple },
-];
+  // { href: "/", label: "Home", icon: User },
+  // { href: "/projects", label: "Projects", icon: Code },
+  // { href: "/gaming", label: "Gaming", icon: GameController },
+  // { href: "/blog", label: "Blog", icon: Notebook },
+  // { href: "/contact", label: "Contact", icon: EnvelopeSimple },
+] as { href: string, label: string, icon: any }[];
 
 export default function Navigation() {
   const [activeItem, setActiveItem] = useState("/");

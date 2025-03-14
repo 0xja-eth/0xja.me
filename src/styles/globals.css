@@ -23,6 +23,26 @@ body {
   font-family: 'Press Start 2P', system-ui;
 }
 
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(75, 85, 99);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(107, 114, 128);
+}
+
 @layer components {
   .pixel-border {
     @apply border-2 border-[#ffffff] relative p-1;
@@ -41,11 +61,11 @@ body {
 
   .game-container {
     @apply mx-auto px-4 sm:px-6 lg:px-8;
-    min-height: calc(100vh - 4rem);
+    font-family: 'Press Start 2P', system-ui;
   }
 
   .pixel-button {
-    @apply px-4 py-2 bg-indigo-600 text-white transition-all duration-200 ease-in-out;
+    @apply px-4 py-2 bg-indigo-600 text-white transition-all duration-200 ease-in-out rounded-lg;
     image-rendering: pixelated;
   }
 
@@ -114,6 +134,42 @@ body {
 
 .animate-scan-y {
   animation: scan-y 2s linear infinite;
+}
+
+/* 闪光文本效果 */
+.shine-text {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  animation: shine 3s linear infinite;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  background-color: #6366f188;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 添加悬停效果 */
+.shine-text:hover {
+  animation-duration: 1.5s;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
 @media (min-width: 640px) {
