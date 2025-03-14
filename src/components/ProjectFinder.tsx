@@ -194,7 +194,7 @@ Available commands:
 
       <div className="flex divide-x divide-gray-700/50 h-[calc(100vh-300px)] min-h-[600px]">
         {/* Sidebar */}
-        <div className="w-64 flex-shrink-0 p-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50">
+        <div className="w-64 flex-shrink-0 p-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800/50 font-sans">
           {/* Root Directory */}
           <button
             onClick={() => {
@@ -207,7 +207,7 @@ Available commands:
           >
             <span className="flex-shrink-0">🛠️</span>
             <span className="truncate">
-              {language === 'en' ? 'Projects' : '项目'}
+              {language === 'en' ? 'Projects' : '项目'} ({projects.length})
             </span>
           </button>
 
@@ -223,7 +223,7 @@ Available commands:
           >
             <span className="flex-shrink-0">📝</span>
             <span className="truncate">
-              {language === 'en' ? 'Blogs' : '博客'}
+              {language === 'en' ? 'Blogs' : '博客'} ({blogs.length})
             </span>
           </button>
 
@@ -241,7 +241,7 @@ Available commands:
                 }`}
               >
                 <span className="flex-shrink-0">{category.icon}</span>
-                <span className="truncate">{category.name[language]}</span>
+                <span className="truncate">{category.name[language]} ({projects.filter(p => p.category === key).length})</span>
               </button>
             ))
           ) : (
@@ -254,7 +254,7 @@ Available commands:
                 }`}
               >
                 <span className="flex-shrink-0">{category.icon}</span>
-                <span className="truncate">{category.name[language]}</span>
+                <span className="truncate">{category.name[language]} ({blogs.filter(b => b.category === key).length})</span>
               </button>
             ))
           )}
@@ -301,7 +301,7 @@ Available commands:
                       </div>
 
                       {/* Time Period */}
-                      <div className="absolute bottom-2 left-2 z-20 text-xs bg-black/50 px-2 py-1 rounded font-bold flex items-center gap-1">
+                      <div className="absolute bottom-2 left-2 z-20 bg-black/50 px-2 py-1 rounded font-bold font-sans flex items-center gap-1">
                         <span>{project.startDate}</span>
                       </div>
                     </div>

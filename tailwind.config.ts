@@ -55,8 +55,21 @@ const config: Config = {
         '2xl': '1536px',
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
-        pixel: ['var(--font-pixel)', 'monospace'],
+        sans: ['var(--font-vt323)', 'system-ui', 'sans-serif'],
+        pixel: ['var(--font-press-start)', 'monospace'],
+      },
+      colors: {
+        // RPG 属性颜色
+        'stat-str': '#ff4444', // 力量 - 红色
+        'stat-int': '#4444ff', // 智力 - 蓝色
+        'stat-agi': '#44ff44', // 敏捷 - 绿色
+        'stat-dex': '#ffff44', // 灵巧 - 黄色
+        'stat-luk': '#ff44ff', // 幸运 - 紫色
+        // 装备稀有度颜色
+        'rarity-common': '#ffffff',   // 普通 - 白色
+        'rarity-rare': '#4444ff',     // 稀有 - 蓝色
+        'rarity-epic': '#ff44ff',     // 史诗 - 紫色
+        'rarity-legendary': '#ffaa00', // 传说 - 金色
       },
     },
   },

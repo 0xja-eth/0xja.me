@@ -17,7 +17,7 @@ export const zh = {
     description: '探索我在不同区块链上的冒险之旅。每个节点代表一个我深入研究和开发过的区块链生态系统。点击节点查看详细信息！'
   },
   projects: {
-    title: '特色项目',
+    title: '0xJA.eth 的资源浏览器',
     viewDemo: '查看演示',
     viewGithub: '查看代码',
     techStack: '技术栈'

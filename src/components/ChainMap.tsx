@@ -252,7 +252,7 @@ export default function ChainMap() {
                   <FiExternalLink />
                 </a>
               </div>
-              <p className="text-gray-400 mb-3">
+              <p className="text-gray-400 mb-3 font-sans">
                 {selectedChain.description[language]}
               </p>
               <div className="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
@@ -264,7 +264,7 @@ export default function ChainMap() {
                   }}
                 />
               </div>
-              <div className="text-sm mt-1 text-gray-400">
+              <div className="text-lg font-bold mt-1 text-gray-400 font-sans">
               {language === 'en' ? 'Proficiency' : '熟练度'} {selectedChain.level}/100
               </div>
             </div>

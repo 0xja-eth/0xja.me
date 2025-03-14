@@ -17,7 +17,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
-  const [translations, setTranslations] = useState<Translations>(zh);
+  const [translations, setTranslations] = useState<Translations>(en);
 
   useEffect(() => {
     // 从本地存储加载语言设置

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Press_Start_2P, Inter } from 'next/font/google';
+import { Press_Start_2P, VT323 } from 'next/font/google';
 import "@/styles/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { LanguageProvider } from '@/i18n/context';
@@ -10,14 +10,17 @@ import { Providers } from "./providers";
 const pressStart2P = Press_Start_2P({ 
   weight: '400',
   subsets: ['latin'],
+  variable: '--font-press-start',
   display: 'swap',
-  variable: '--font-pixel',
+  preload: true,
 });
 
-const inter = Inter({
+const vt323 = VT323({
+  weight: '400',
   subsets: ['latin'],
+  variable: '--font-vt323',
   display: 'swap',
-  variable: '--font-sans',
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -36,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${pressStart2P.variable} ${inter.variable} min-h-screen flex flex-col`}>
+    <html lang="en" className={`${pressStart2P.variable} ${vt323.variable} dark`}>
+      <body className="min-h-screen flex flex-col">
         <Providers>
           <LanguageProvider>
             <Navigation />
@@ -47,7 +50,7 @@ export default function RootLayout({
                 {children}
               </div>
             </main>
-            <footer className="text-center py-4 text-gray-600 text-sm font-sans bg-black/50 backdrop-blur-sm">
+            <footer className="text-center py-4 text-gray-600 text-m font-sans bg-black/50 backdrop-blur-sm">
               <span className="shine-text">🤩 95% made by Windsurf 🤩</span>
             </footer>
           </LanguageProvider>

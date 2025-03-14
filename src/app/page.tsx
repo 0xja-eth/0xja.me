@@ -24,7 +24,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            // className="space-y-6"
           >
             <motion.div
               initial={{ scale: 0 }}
@@ -42,13 +42,13 @@ export default function Home() {
                 priority
               />
             </motion.div>
-            <h1 className="text-4xl md:text-6xl font-bold neon-text mb-4">
+            <h1 className="text-4xl md:text-6xl font-bold neon-text mb-8">
               {personalInfo.name}
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-8">
+            <p className="text-xl md:text-2xl text-gray-300 mb-12">
               {t.hero.title}
             </p>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
+            <p className="text-lg text-gray-400 max-w-4xl mx-auto mb-16">
               {t.hero.bio}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
@@ -97,7 +97,7 @@ export default function Home() {
         {/* Projects Section */}
         <section className="py-20 px-4 bg-gradient-to-b from-transparent to-gray-900/50">
           <h2 className="text-2xl md:text-3xl text-center neon-text mb-12">
-            0xJA.eth's Finder
+            {t.projects.title}
           </h2>
           <div className="max-w-7xl mx-auto">
             <ProjectFinder 

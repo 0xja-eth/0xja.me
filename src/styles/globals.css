@@ -20,6 +20,7 @@ body {
     rgb(var(--background-start-rgb)),
     rgb(var(--background-end-rgb))
   );
+  /* font-family: 'VT323', ui-monospace, monospace; */
   font-family: 'Press Start 2P', system-ui;
 }
 
@@ -72,6 +73,7 @@ body {
   .pixel-button:hover {
     @apply bg-indigo-700 -translate-y-0.5;
     box-shadow: var(--neon-glow);
+    color: white;
   }
 
   .menu-item {

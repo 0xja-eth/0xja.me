@@ -266,7 +266,7 @@ export default function CharacterStats() {
 
                   {/* Equipment Details Tooltip */}
                   {selectedEquipment?.id === equipment.id && (
-                    <div className="absolute left-full ml-2 w-96 p-3 rounded-lg bg-gray-900/95 border border-white/10 z-[60]">
+                    <div className="absolute left-full ml-2 w-72 p-3 rounded-lg bg-gray-900/95 border border-white/10 z-[60]">
                       <div className="flex items-start gap-2 mb-2">
                         <span className="text-xl">{equipment.icon}</span>
                         <div>
@@ -276,7 +276,7 @@ export default function CharacterStats() {
                           <span className="text-xs text-gray-500 capitalize">{equipment.type}</span>
                         </div>
                       </div>
-                      <p className="text-xs text-gray-400 mb-2">
+                      <p className="text-m text-gray-400 mb-2 font-sans">
                         {equipment.description[language]}
                       </p>
                       <div className="space-y-1">
@@ -322,7 +322,7 @@ export default function CharacterStats() {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer rounded-full" />
                   </motion.div>
                 </div>
-                <div className="mt-2 text-xs text-gray-400">
+                <div className="mt-2 text-gray-400 font-sans">
                   {stat.description[language]}
                 </div>
               </motion.div>

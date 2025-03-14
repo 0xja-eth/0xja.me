@@ -11,9 +11,7 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-import {
-  base,
-} from 'wagmi/chains';
+import { mainnet, arbitrum, optimism, polygon, base, bsc } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +19,7 @@ export const config = getDefaultConfig({
   appName: 'Axon AI',
   projectId: 'a1fc63f578160e84914e2f3788fc6c58',
   chains: [
-    base,
+    mainnet, arbitrum, optimism, polygon, base, bsc
   ],
   ssr: true,
 });
