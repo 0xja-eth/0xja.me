@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useAccount, useBalance, useWriteContract } from 'wagmi';
+import { useAccount, useBalance, useSendTransaction, useWriteContract } from 'wagmi';
 import { parseUnits } from 'ethers';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { FiGift } from 'react-icons/fi';
 import { useLanguage } from "@/i18n/context";
-import { TOKEN_ADDRESSES, TIP_CONTRACT_ADDRESS } from '@/config/web3';
+import { TOKEN_ADDRESSES, TIP_CONTRACT_ADDRESS, TIP_ACCOUNT_ADDRESS } from '@/config/web3';
 import { RARITY_COLORS, equipments } from '@/data/equipment';
 import { Equipment, Stat } from '@/data/types';
 import { stats } from '@/data/personal';
@@ -20,9 +20,9 @@ interface TokenOption {
 
 const TOKENS: TokenOption[] = [
   { symbol: 'ETH', decimals: 18 },
-  { symbol: 'USDT', decimals: 6 },
-  { symbol: 'USDC', decimals: 6 },
-  { symbol: 'WBTC', decimals: 8 }
+  // { symbol: 'USDT', decimals: 6 },
+  // { symbol: 'USDC', decimals: 6 },
+  // { symbol: 'WBTC', decimals: 8 }
 ];
 
 export default function CharacterStats() {
@@ -35,6 +35,8 @@ export default function CharacterStats() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { sendTransactionAsync } = useSendTransaction()
+  
   const { writeContractAsync } = useWriteContract()
 
   // 获取选定代币的余额
@@ -64,6 +66,27 @@ export default function CharacterStats() {
         args: [TIP_CONTRACT_ADDRESS, amount],
       })
 
+  const transfer = (address: `0x${string}`, amount: bigint) =>
+    writeContractAsync({
+      address: TOKEN_ADDRESSES[selectedToken.symbol] as `0x${string}`,
+      abi: [
+        {
+          name: 'transfer',
+          type: 'function',
+          stateMutability: 'nonpayable',
+          inputs: [
+            { name: 'to', type: 'address' },
+            { name: 'amount', type: 'uint256' }
+          ],
+          outputs: [
+            { name: 'success', type: 'bool' }
+          ]
+        }
+      ],
+      functionName: 'transfer',
+      args: [address, amount]
+    })  
+
   const tip = (amount: bigint) =>
       writeContractAsync({
         address: TIP_CONTRACT_ADDRESS as `0x${string}`,
@@ -89,6 +112,8 @@ export default function CharacterStats() {
       setError(null);
       setIsLoading(true);
 
+      console.log("handleTip", amount)
+
       if (!amount || parseFloat(amount) <= 0) {
         throw new Error(language === 'en' ? 'Invalid amount' : '无效金额');
       }
@@ -100,16 +125,18 @@ export default function CharacterStats() {
       }
 
       if (selectedToken.symbol !== 'ETH') {
-        // ERC20 代币需要先授权
-        await approve(tipAmount);
+        await transfer(TIP_ACCOUNT_ADDRESS, tipAmount);
+      } else {
+        await sendTransactionAsync({
+          to: TIP_ACCOUNT_ADDRESS,
+          value: tipAmount
+        })
       }
-
-      // 发送打赏
-      await tip(tipAmount);
 
       setAmount('');
       setIsLoading(false);
     } catch (err) {
+      console.error(err);
       setError((err as Error).message);
       setIsLoading(false);
     }
