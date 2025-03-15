@@ -60,7 +60,7 @@ export const chains: Chain[] = [
     name: 'Solana',
     icon: '/chains/solana.svg',
     url: 'https://solana.com',
-    color: '#14F195',
+    color: '#E669B8',
     level: 73,
     description: {
       en: 'High-performance blockchain using Proof-of-History consensus to achieve 50k+ TPS for web-scale applications',

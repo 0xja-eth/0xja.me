@@ -12,6 +12,8 @@ import { TOKEN_ADDRESSES, TIP_CONTRACT_ADDRESS, TIP_ACCOUNT_ADDRESS } from '@/co
 import { RARITY_COLORS, equipments } from '@/data/equipment';
 import { Equipment, Stat } from '@/data/types';
 import { stats } from '@/data/personal';
+import DonationAddresses from './DonationAddresses';
+import { FaEthereum } from 'react-icons/fa';
 
 interface TokenOption {
   symbol: keyof typeof TOKEN_ADDRESSES;
@@ -34,6 +36,7 @@ export default function CharacterStats() {
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showDonation, setShowDonation] = useState(false);
 
   const { sendTransactionAsync } = useSendTransaction()
   
@@ -195,7 +198,7 @@ export default function CharacterStats() {
   }, [selectedEquipment]);
 
   return (
-    <div className="w-full backdrop-blur-sm bg-gray-900/30">
+    <div className="relative">
       <div className="flex gap-8 p-6">
         {/* Character Art and Equipment */}
         <div className="flex flex-col gap-4">
@@ -331,139 +334,188 @@ export default function CharacterStats() {
         </div>
       </div>
 
-      {/* Tip 区域 */}
-      <div className="p-4 bg-black/50 backdrop-blur-sm rounded-lg border border-white/10">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold">
-            {language === 'en' ? 'Support Me' : '支持我'}
-          </h3>
-          <div className="scale-90 origin-right">
-            <ConnectButton.Custom>
-              {({
-                account,
-                chain,
-                openAccountModal,
-                openChainModal,
-                openConnectModal,
-                mounted,
-              }) => {
-                const ready = mounted;
-                const connected = ready && account && chain;
+      {/* 打赏按钮和弹窗 */}
+      <div className="mt-8">
+        <button
+          onClick={() => setShowDonation(true)}
+          className="pixel-button w-full py-3 text-lg"
+        >
+          {language === 'en' ? '🎁 Support Me' : '🎁 打赏'}
+        </button>
 
-                return (
-                  <div
-                    {...(!ready && {
-                      'aria-hidden': true,
-                      style: {
-                        opacity: 0,
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                      },
-                    })}
-                  >
-                    {(() => {
-                      if (!connected) {
-                        return (
-                          <button
-                            onClick={openConnectModal}
-                            className="pixel-button bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-                          >
-                            {language === 'en' ? 'Connect Wallet' : '连接钱包'}
-                          </button>
-                        );
-                      }
+        {showDonation && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              onClick={() => setShowDonation(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, translateX: "-50%", translateY: "-50%" }}
+              animate={{ opacity: 1, scale: 1, translateX: "-50%", translateY: "-50%" }}
+              exit={{ opacity: 0, scale: 0.9, translateX: "-50%", translateY: "-50%" }}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-gray-900/95 border border-white/10 rounded-xl p-6 z-50"
+            >
+              <h2 className="text-2xl font-pixel mb-6 text-center neon-text">
+                {language === 'en' ? '🎁 Support Me' : '🎁 打赏'}
+              </h2>
 
-                      if (chain.unsupported) {
-                        return (
-                          <button
-                            onClick={openChainModal}
-                            className="pixel-button bg-red-500 hover:bg-red-600"
+              <div className="space-y-6">
+                {/* EVM 链打赏 */}
+                <div>
+                  <h3 className="text-xl font-pixel mb-4">
+                    {language === 'en' ? 'EVM Chain Support' : 'EVM链打赏'}
+                  </h3>
+                  
+                  {isConnected ? (
+                    <div className="space-y-4">
+                      <div className="flex gap-2">
+                        <div className="flex-1 flex gap-2">
+                          <input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            className="flex-1 pixel-input bg-black/50 border border-white/10 rounded px-3 py-2 w-[256px]"
+                            step="0.01"
+                            min="0"
+                            placeholder={language === 'en' ? 'Amount' : '金额'}
+                          />
+                          <select
+                            value={selectedToken.symbol}
+                            onChange={(e) => setSelectedToken(TOKENS.find(t => t.symbol === e.target.value as keyof typeof TOKEN_ADDRESSES)!)}
+                            className="pixel-input bg-black/50 border border-white/10 rounded px-3 py-2"
                           >
-                            {language === 'en' ? 'Wrong Network' : '错误网络'}
-                          </button>
-                        );
-                      }
-
-                      return (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={openChainModal}
-                            className="pixel-button bg-gradient-to-r from-blue-500 to-purple-500"
-                          >
-                            {chain.name}
-                          </button>
-                          <button
-                            onClick={openAccountModal}
-                            className="pixel-button bg-gradient-to-r from-purple-500 to-pink-500"
-                          >
-                            {account.displayName}
-                          </button>
+                            {TOKENS.map((token) => (
+                              <option key={token.symbol} value={token.symbol}>
+                                {token.symbol}
+                              </option>
+                            ))}
+                          </select>
                         </div>
-                      );
-                    })()}
-                  </div>
-                );
-              }}
-            </ConnectButton.Custom>
-          </div>
-        </div>
+                        <button
+                          onClick={handleTip}
+                          disabled={isLoading}
+                          className="flex-1 pixel-button bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                          <FiGift className="mr-2" />
+                          {isLoading
+                            ? language === 'en'
+                              ? 'Sending...'
+                              : '发送中...'
+                            : language === 'en'
+                              ? 'Tip'
+                              : '打赏'}
+                        </button>
+                      </div>
+                      {error && (
+                        <p className="text-red-500 font-sans">
+                          {error === 'Insufficient balance'
+                            ? language === 'en'
+                              ? 'Insufficient balance'
+                              : '余额不足'
+                            : error}
+                        </p>
+                      )}
+                      {balance && (
+                        <p className="text-gray-400 font-sans">
+                          {language === 'en' ? 'Balance: ' : '余额：'}
+                          {balance.formatted} {balance.symbol}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
 
-        {isConnected && (
-          <div className="space-y-4">
-            <div className="flex gap-2">
-              <div className="flex-1 flex gap-2">
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="flex-1 pixel-input bg-black/50 border border-white/10 rounded px-3 py-2"
-                  step="0.01"
-                  min="0"
-                  placeholder={language === 'en' ? 'Amount' : '金额'}
-                />
-                <select
-                  value={selectedToken.symbol}
-                  onChange={(e) => setSelectedToken(TOKENS.find(t => t.symbol === e.target.value as keyof typeof TOKEN_ADDRESSES)!)}
-                  className="pixel-input bg-black/50 border border-white/10 rounded px-3 py-2"
-                >
-                  {TOKENS.map((token) => (
-                    <option key={token.symbol} value={token.symbol}>
-                      {token.symbol}
-                    </option>
-                  ))}
-                </select>
+                    <ConnectButton.Custom>
+                      {({
+                        account,
+                        chain,
+                        openAccountModal,
+                        openChainModal,
+                        openConnectModal,
+                        mounted,
+                      }) => {
+                        const ready = mounted;
+                        const connected = ready && account && chain;
+
+                        return (
+                          <div
+                            {...(!ready && {
+                              'aria-hidden': true,
+                              style: {
+                                opacity: 0,
+                                pointerEvents: 'none',
+                                userSelect: 'none',
+                              },
+                            })}
+                          >
+                            {(() => {
+                              if (!connected) {
+                                return (
+                                  <button
+                                    onClick={openConnectModal}
+                                    className="pixel-button bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                                  >
+                                    {language === 'en' ? 'Connect Wallet' : '连接钱包'}
+                                  </button>
+                                );
+                              }
+
+                              if (chain.unsupported) {
+                                return (
+                                  <button
+                                    onClick={openChainModal}
+                                    className="pixel-button bg-red-500 hover:bg-red-600"
+                                  >
+                                    {language === 'en' ? 'Wrong Network' : '错误网络'}
+                                  </button>
+                                );
+                              }
+
+                              return (
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={openChainModal}
+                                    className="pixel-button bg-gradient-to-r from-blue-500 to-purple-500"
+                                  >
+                                    {chain.name}
+                                  </button>
+                                  <button
+                                    onClick={openAccountModal}
+                                    className="pixel-button bg-gradient-to-r from-purple-500 to-pink-500"
+                                  >
+                                    {account.displayName}
+                                  </button>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        );
+                      }}
+                    </ConnectButton.Custom>
+                    // <button
+                    //   onClick={handleTip}
+                    //   className="flex items-center justify-center gap-2 w-full bg-[#627EEA] hover:bg-[#627EEA]/80 text-white py-3 rounded-lg transition-colors font-sans"
+                    // >
+                    //   <FaEthereum className="w-6 h-6" />
+                    //   {language === 'en' ? 'Connect Wallet' : '连接钱包'}
+                    // </button>
+                  )}
+                </div>
+
+                {/* 非 EVM 链打赏 */}
+                <DonationAddresses />
               </div>
+
               <button
-                onClick={handleTip}
-                disabled={isLoading}
-                className="pixel-button bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                onClick={() => setShowDonation(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white"
               >
-                <FiGift className="mr-2" />
-                {isLoading
-                  ? language === 'en'
-                    ? 'Sending...'
-                    : '发送中...'
-                  : language === 'en'
-                    ? 'Tip'
-                    : '打赏'}
+                ✕
               </button>
-            </div>
-            {error && (
-              <p className="text-red-500 text-sm">
-                {error === 'Insufficient balance'
-                  ? language === 'en'
-                    ? 'Insufficient balance'
-                    : '余额不足'
-                  : error}
-              </p>
-            )}
-            {balance && (
-              <p className="text-sm text-gray-400">
-                {language === 'en' ? 'Balance: ' : '余额：'}
-                {balance.formatted} {balance.symbol}
-              </p>
-            )}
-          </div>
+            </motion.div>
+          </>
         )}
       </div>
     </div>

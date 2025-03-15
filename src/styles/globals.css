@@ -10,7 +10,9 @@
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 20, 20, 40;
   --pixel-border: #ffffff;
-  --neon-glow: 0 0 5px #4f46e5, 0 0 20px #4f46e5, 0 0 40px #4f46e5;
+  --neon-glow: 0 0 5px theme('colors.indigo.500'),
+               0 0 20px theme('colors.indigo.500'),
+               0 0 60px theme('colors.indigo.500');
 }
 
 body {
@@ -20,7 +22,6 @@ body {
     rgb(var(--background-start-rgb)),
     rgb(var(--background-end-rgb))
   );
-  /* font-family: 'VT323', ui-monospace, monospace; */
   font-family: 'Press Start 2P', system-ui;
 }
 
@@ -46,142 +47,209 @@ body {
 
 @layer components {
   .pixel-border {
-    @apply border-2 border-[#ffffff] relative p-1;
+    border: 2px solid #ffffff;
+    position: relative;
+    padding: 1px;
     image-rendering: pixelated;
   }
 
   .pixel-border::after {
     content: '';
-    /*@apply absolute -top-1 -left-1 -right-1 -bottom-1 bg-transparent border-2 border-[#ffffff] -z-10;*/
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: transparent;
+    border: 2px solid #ffffff;
+    z-index: -10;
   }
 
   .neon-text {
-    @apply text-white;
-    text-shadow: var(--neon-glow);
+    color: white;
+    text-shadow: 0 0 5px theme('colors.indigo.500'),
+                 0 0 20px theme('colors.indigo.500'),
+                 0 0 60px theme('colors.indigo.500');
   }
 
   .game-container {
-    @apply mx-auto px-4 sm:px-6 lg:px-8;
+    margin: 0 auto;
+    padding: 1rem;
     font-family: 'Press Start 2P', system-ui;
   }
 
   .pixel-button {
-    @apply px-4 py-2 bg-indigo-600 text-white transition-all duration-200 ease-in-out rounded-lg;
-    image-rendering: pixelated;
+    position: relative;
+    background-color: theme('colors.indigo.600');
+    color: white;
+    border-radius: theme('borderRadius.lg');
+    transition: all 0.3s ease;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
   }
 
   .pixel-button:hover {
-    @apply bg-indigo-700 -translate-y-0.5;
+    background-color: theme('colors.indigo.700');
+    transform: translateY(-2px);
     box-shadow: var(--neon-glow);
     color: white;
   }
 
+  .pixel-button:active {
+    transform: translateY(0);
+  }
+
   .menu-item {
-    @apply px-4 py-2 transition-all duration-200;
+    position: relative;
+    overflow: hidden;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .menu-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: theme('colors.indigo.500');
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .menu-item:hover::before {
+    transform: translateX(0);
   }
 
   .menu-item:hover {
-    @apply bg-indigo-600 scale-105;
+    background-color: theme('colors.indigo.600');
+    transform: scale(1.05);
     box-shadow: var(--neon-glow);
   }
-}
 
-/* 添加新的动画效果 */
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
+  /* 打赏按钮动画 */
+  .donation-button {
+    position: relative;
+    overflow: hidden;
   }
-  50% {
-    opacity: 0.5;
-  }
-}
 
-@keyframes scan-line {
-  0% {
+  .donation-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: linear-gradient(
-      to bottom,
+      to right,
       transparent 0%,
-      rgba(168, 85, 247, 0.05) 50%,
+      theme('colors.white') 20%,
+      theme('colors.white') 80%,
       transparent 100%
     );
-    transform: translateY(-100%);
+    transform: translateX(-100%);
   }
-  100% {
+
+  .donation-button:hover::before {
+    animation: shimmer 1s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .donation-icon {
+    transition: transform 0.2s ease;
+  }
+
+  .donation-icon:hover {
+    transform: scale(1.2);
+  }
+
+  .shine-text {
     background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(168, 85, 247, 0.05) 50%,
-      transparent 100%
+      to right,
+      theme('colors.gray.400') 20%,
+      theme('colors.gray.100') 40%,
+      theme('colors.gray.100') 60%,
+      theme('colors.gray.400') 80%
     );
-    transform: translateY(100%);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: shine 4s ease-in-out infinite;
   }
-}
 
-@keyframes scan-y {
-  0% {
-    transform: translateY(-100%);
+  @keyframes shine {
+    to {
+      background-position: 200% center;
+    }
   }
-  100% {
-    transform: translateY(100%);
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
   }
-}
 
-.animate-pulse-slow {
-  animation: pulse-slow 3s ease-in-out infinite;
-}
-
-.animate-scan-line {
-  animation: scan-line 4s linear infinite;
-}
-
-.animate-scan-y {
-  animation: scan-y 2s linear infinite;
-}
-
-/* 闪光文本效果 */
-.shine-text {
-  position: relative;
-  display: inline-block;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  animation: shine 3s linear infinite;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  background-color: #6366f188;
-}
-
-@keyframes shine {
-  0% {
-    background-position: 200% 0;
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
-  100% {
-    background-position: -200% 0;
-  }
-}
 
-/* 添加悬停效果 */
-.shine-text:hover {
-  animation-duration: 1.5s;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  .animate-scan-line {
+    animation: scan-line 4s linear infinite;
+  }
+
+  @keyframes scan-line {
+    0% {
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(168, 85, 247, 0.05) 50%,
+        transparent 100%
+      );
+      transform: translateY(-100%);
+    }
+    100% {
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(168, 85, 247, 0.05) 50%,
+        transparent 100%
+      );
+      transform: translateY(100%);
+    }
+  }
+
+  .animate-scan-y {
+    animation: scan-y 2s linear infinite;
+  }
+
+  @keyframes scan-y {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
 }
 
 @media (min-width: 640px) {
   .game-container {
-    @apply px-6;
+    padding: 1rem 2rem;
   }
 }
 
 @media (min-width: 1024px) {
   .game-container {
-    @apply px-8;
+    padding: 1rem 3rem;
   }
 }
