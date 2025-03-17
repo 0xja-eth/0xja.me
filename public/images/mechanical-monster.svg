@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 机器人主体 -->
+  <g id="robot-body">
+    <!-- 背景光圈 -->
+    <circle cx="32" cy="32" r="30" fill="#2D3748" opacity="0.3"/>
+    
+    <!-- 机器人头部 -->
+    <rect x="24" y="16" width="16" height="16" fill="#4A5568" rx="2"/>
+    <rect x="26" y="18" width="4" height="4" fill="#48BB78"/>
+    <rect x="34" y="18" width="4" height="4" fill="#48BB78"/>
+    
+    <!-- 机器人身体 -->
+    <rect x="20" y="32" width="24" height="20" fill="#4A5568" rx="3"/>
+    
+    <!-- 装饰线条 -->
+    <line x1="24" y1="36" x2="40" y2="36" stroke="#48BB78" stroke-width="2"/>
+    <line x1="24" y1="40" x2="40" y2="40" stroke="#48BB78" stroke-width="2"/>
+    <line x1="24" y1="44" x2="40" y2="44" stroke="#48BB78" stroke-width="2"/>
+    
+    <!-- 机械臂 -->
+    <rect x="16" y="34" width="4" height="12" fill="#4A5568"/>
+    <rect x="44" y="34" width="4" height="12" fill="#4A5568"/>
+    
+    <!-- 能量核心 -->
+    <circle cx="32" cy="42" r="4" fill="#48BB78">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- 激活状态的额外效果 -->
+  <g id="active-effects" opacity="0">
+    <circle cx="32" cy="32" r="28" stroke="#48BB78" stroke-width="2" fill="none">
+      <animate attributeName="r" values="28;30;28" dur="1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.5;0" dur="1s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- 损坏状态的效果 -->
+  <g id="damage-effects" opacity="0">
+    <line x1="20" y1="20" x2="24" y2="24" stroke="#FF0000" stroke-width="2"/>
+    <line x1="40" y1="40" x2="44" y2="44" stroke="#FF0000" stroke-width="2"/>
+    <line x1="24" y1="44" x2="28" y2="48" stroke="#FF0000" stroke-width="2"/>
+  </g>
+</svg>

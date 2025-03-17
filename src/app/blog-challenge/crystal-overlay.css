@@ -1,0 +1,85 @@
+.crystal-overlay {
+  background: rgba(56, 178, 172, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(129, 230, 217, 0.2);
+  border-radius: 1rem;
+  box-shadow: 
+    0 0 20px rgba(129, 230, 217, 0.1),
+    inset 0 0 20px rgba(129, 230, 217, 0.1);
+  transition: all 0.3s ease;
+}
+
+.crystal-overlay:hover {
+  border-color: rgba(129, 230, 217, 0.3);
+  box-shadow: 
+    0 0 30px rgba(129, 230, 217, 0.2),
+    inset 0 0 30px rgba(129, 230, 217, 0.2);
+}
+
+.crystal-button {
+  background: rgba(56, 178, 172, 0.1);
+  border: 1px solid rgba(129, 230, 217, 0.3);
+  border-radius: 0.5rem;
+  color: rgba(129, 230, 217, 0.8);
+  transition: all 0.3s ease;
+}
+
+.crystal-button:hover {
+  background: rgba(56, 178, 172, 0.2);
+  border-color: rgba(129, 230, 217, 0.5);
+  color: rgba(129, 230, 217, 1);
+  transform: translateY(-1px);
+}
+
+.crystal-button:active {
+  transform: translateY(0);
+}
+
+.crystal-input {
+  background: rgba(56, 178, 172, 0.05);
+  border: 1px solid rgba(129, 230, 217, 0.2);
+  border-radius: 0.5rem;
+  color: rgba(129, 230, 217, 0.8);
+  transition: all 0.3s ease;
+}
+
+.crystal-input:focus {
+  background: rgba(56, 178, 172, 0.1);
+  border-color: rgba(129, 230, 217, 0.4);
+  box-shadow: 0 0 10px rgba(129, 230, 217, 0.2);
+}
+
+.crystal-progress {
+  background: rgba(56, 178, 172, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.crystal-progress-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(129, 230, 217, 0.3),
+    rgba(56, 178, 172, 0.5)
+  );
+  box-shadow: 0 0 10px rgba(129, 230, 217, 0.3);
+  transition: width 0.3s ease;
+}
+
+.crystal-title {
+  color: rgba(129, 230, 217, 0.9);
+  text-shadow: 0 0 10px rgba(129, 230, 217, 0.5);
+}
+
+.crystal-text {
+  color: rgba(129, 230, 217, 0.7);
+}
+
+/* 动画效果 */
+@keyframes crystal-glow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.5; }
+}
+
+.crystal-glow {
+  animation: crystal-glow 2s ease-in-out infinite;
+}

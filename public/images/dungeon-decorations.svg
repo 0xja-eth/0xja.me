@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 像素风格的水晶 -->
+  <g id="crystal">
+    <path d="M8 8 L12 4 L16 8 L12 12 Z" fill="#B794F4" opacity="0.6">
+      <animate attributeName="opacity" values="0.6;0.8;0.6" dur="2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- 像素风格的齿轮 -->
+  <g id="gear">
+    <path d="M32 28 L36 28 L36 32 L32 32 Z" fill="#805AD5">
+      <animateTransform
+        attributeName="transform"
+        type="rotate"
+        from="0 32 32"
+        to="360 32 32"
+        dur="4s"
+        repeatCount="indefinite"
+      />
+    </path>
+    <path d="M30 26 L34 26 L34 28 L30 28 Z" fill="#805AD5"/>
+    <path d="M30 32 L34 32 L34 34 L30 34 Z" fill="#805AD5"/>
+  </g>
+  
+  <!-- 能量光点 -->
+  <g id="energy-dot">
+    <circle cx="48" cy="48" r="2" fill="#D6BCFA">
+      <animate attributeName="r" values="1;2;1" dur="1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- 电路线 -->
+  <g id="circuit" stroke="#6B46C1" stroke-width="1" fill="none">
+    <path d="M4 32 L12 32 L16 28 L24 28">
+      <animate attributeName="stroke-dasharray" values="1,3;2,2;1,3" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M40 32 L48 32 L52 36 L60 36">
+      <animate attributeName="stroke-dasharray" values="2,2;1,3;2,2" dur="1s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@microlink/mql": "^0.13.14",
     "@nextui-org/react": "^2.6.11",
     "@phosphor-icons/react": "^2.1.7",
     "@rainbow-me/rainbowkit": "^2.2.4",
@@ -16,10 +17,12 @@
     "@react-three/fiber": "^9.1.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "^5.67.3",
+    "@types/jsdom": "^21.1.7",
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/wagmi": "^5.1.11",
     "ethers": "^6.13.5",
     "framer-motion": "^12.4.11",
+    "jsdom": "^26.0.0",
     "nes.css": "^2.2.1",
     "next": "15.2.1",
     "react": "^18.2.0",

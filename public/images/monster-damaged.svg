@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 损坏效果 -->
+  <g transform="rotate(15, 32, 32)">
+    <!-- 基础形状（破损） -->
+    <path d="M16 16 L48 16 L48 48 L16 48 Z" fill="#1A202C" stroke="#2D3748" stroke-width="2" stroke-dasharray="4 2"/>
+    
+    <!-- 损坏的眼睛 -->
+    <rect x="22" y="24" width="6" height="2" fill="#4A5568"/>
+    <rect x="36" y="24" width="2" height="6" fill="#4A5568"/>
+    
+    <!-- 破损的机械装饰 -->
+    <path d="M20 36 L44 36 L42 40 L22 40 Z" fill="#2D3748"/>
+    <path d="M12 28 L16 28 L14 36 L12 36 Z" fill="#2D3748"/>
+    <path d="M48 28 L52 28 L52 32 L50 36 L48 36 Z" fill="#2D3748"/>
+    
+    <!-- 损坏的能量核心 -->
+    <path d="M30 42 L34 42 L33 46 L31 46 Z" fill="#4A5568"/>
+  </g>
+  
+  <!-- 电火花效果 -->
+  <g stroke="#718096" stroke-width="2">
+    <line x1="20" y1="20" x2="24" y2="24">
+      <animate attributeName="opacity" values="0;1;0" dur="0.3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="44" y1="40" x2="48" y2="44">
+      <animate attributeName="opacity" values="0;1;0" dur="0.4s" repeatCount="indefinite"/>
+    </line>
+    <line x1="16" y1="44" x2="20" y2="48">
+      <animate attributeName="opacity" values="0;1;0" dur="0.35s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- 烟雾效果 -->
+  <circle cx="24" cy="16" r="2" fill="#4A5568" opacity="0.6">
+    <animate attributeName="cy" values="16;12;8" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0.3;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="40" cy="18" r="1.5" fill="#4A5568" opacity="0.5">
+    <animate attributeName="cy" values="18;14;10" dur="1.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.2;0" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+</svg>

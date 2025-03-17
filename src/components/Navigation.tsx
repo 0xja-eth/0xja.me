@@ -3,15 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { GameController, Code, User, Notebook, EnvelopeSimple } from "@phosphor-icons/react";
+import { GameController, Code, User, Notebook, EnvelopeSimple, Trophy } from "@phosphor-icons/react";
 import ConnectWallet from './ConnectWallet';
 
 const menuItems = [
-  // { href: "/", label: "Home", icon: User },
+  { href: "/", label: "Home", icon: User },
   // { href: "/projects", label: "Projects", icon: Code },
   // { href: "/gaming", label: "Gaming", icon: GameController },
   // { href: "/blog", label: "Blog", icon: Notebook },
   // { href: "/contact", label: "Contact", icon: EnvelopeSimple },
+  { href: "/blog-challenge", label: "Blog Challenge", icon: Trophy },
 ] as { href: string, label: string, icon: any }[];
 
 export default function Navigation() {

@@ -1,0 +1,103 @@
+/* 像素字体 */
+@font-face {
+  font-family: 'PixelFont';
+  src: url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+}
+
+/* 地下城地图样式 */
+.dungeon-map {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background: linear-gradient(to bottom, #0f172a, #1e293b);
+  overflow: hidden;
+}
+
+/* 地下城路径 */
+.dungeon-path {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.path-line {
+  stroke: rgba(129, 230, 217, 0.3);
+  stroke-width: 4;
+  stroke-dasharray: 10;
+  animation: path-flow 20s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(129, 230, 217, 0.2));
+}
+
+@keyframes path-flow {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 机械怪物 */
+.mechanical-monster {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  z-index: 2;
+}
+
+.monster-standby img {
+  filter: grayscale(0.7) brightness(0.7);
+}
+
+.monster-active img {
+  filter: drop-shadow(0 0 10px rgba(129, 230, 217, 0.5));
+}
+
+.monster-damaged img {
+  filter: sepia(0.5) hue-rotate(300deg);
+}
+
+/* 主角 */
+.player {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  z-index: 3;
+  filter: drop-shadow(0 0 15px rgba(129, 230, 217, 0.3));
+}
+
+.player img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 博客卡片 */
+.blog-card {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(129, 230, 217, 0.2);
+  white-space: nowrap;
+}
+
+/* 像素装饰 */
+.pixel-decoration {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  opacity: 0.1;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}

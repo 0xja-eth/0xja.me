@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 发光效果 -->
+  <circle cx="32" cy="32" r="30" fill="#805AD5" opacity="0.2">
+    <animate attributeName="r" values="28;30;28" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 基础形状 -->
+  <rect x="16" y="16" width="32" height="32" fill="#6B46C1" rx="4"/>
+  
+  <!-- 像素眼睛 -->
+  <rect x="22" y="24" width="6" height="6" fill="#9F7AEA">
+    <animate attributeName="fill" values="#9F7AEA;#B794F4;#9F7AEA" dur="0.5s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="36" y="24" width="6" height="6" fill="#9F7AEA">
+    <animate attributeName="fill" values="#9F7AEA;#B794F4;#9F7AEA" dur="0.5s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- 机械装饰 -->
+  <rect x="20" y="36" width="24" height="4" fill="#805AD5"/>
+  <rect x="12" y="28" width="4" height="8" fill="#805AD5"/>
+  <rect x="48" y="28" width="4" height="8" fill="#805AD5"/>
+  
+  <!-- 激活状态能量核心 -->
+  <circle cx="32" cy="44" r="4" fill="#B794F4">
+    <animate attributeName="r" values="3;4;3" dur="0.5s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#B794F4;#D6BCFA;#B794F4" dur="0.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 能量线 -->
+  <line x1="32" y1="12" x2="32" y2="8" stroke="#B794F4" stroke-width="2">
+    <animate attributeName="y2" values="8;6;8" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="52" y1="32" x2="56" y2="32" stroke="#B794F4" stroke-width="2">
+    <animate attributeName="x2" values="56;58;56" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="32" y1="52" x2="32" y2="56" stroke="#B794F4" stroke-width="2">
+    <animate attributeName="y2" values="56;58;56" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="12" y1="32" x2="8" y2="32" stroke="#B794F4" stroke-width="2">
+    <animate attributeName="x2" values="8;6;8" dur="1s" repeatCount="indefinite"/>
+  </line>
+</svg>
