@@ -149,12 +149,6 @@ export default function BlogChallenge() {
   return (
     <main className="min-h-screen p-8 pt-20">
       {/* <DynamicBackground /> */}
-      
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold crystal-text">Blog Challenge</h1>
-      </div>
-
       {/* 筛选器 */}
       <div className="flex gap-4 mb-6">
         <input

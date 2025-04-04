@@ -50,10 +50,13 @@ export default function Challenge(props: ChallengeProps) {
   const { address, abi } = useContract(chainId as number, 'BlogChallenge', props.address);
   const { viewAddress, addressUrl } = useExplorer(chainId as number);
 
-  // // 从合约获取数据
-  // const { data: info, error: infoError } = useReadContract({
+  // 从合约获取数据
+  // const { data: info, refetch: refetchInfo } = useReadContract({
   //   address, abi, functionName: 'getInfo',
   // });
+  const { data: state, refetch: refetchState } = useReadContract({
+    address, abi, functionName: 'getState',
+  });
 
   // useEffect(() => {
   //   if (infoError) {
@@ -72,7 +75,7 @@ export default function Challenge(props: ChallengeProps) {
     currentCycle, started, participatable, 
     participantsCount, blogSubmissionsCount,
     deposit, isChallengerApproved
-  ] = props.state ?? [];
+  ] = state ?? props.state ?? [];
 
   // const { data: currentCycle } = useReadContract({
   //   address, abi, functionName: 'currentCycle',
@@ -138,9 +141,7 @@ export default function Challenge(props: ChallengeProps) {
 
   // 检查当前周期是否已提交
   const hasSubmittedCurrentCycle = blogSubmissions.some(
-    sub => sub.cycle === Number(currentCycle) && 
-    sub.url && 
-    addrInclude(participants, userAddress || '')
+    sub => sub.cycle === Number(currentCycle) && sub.url
   );
 
   // 计算时间相关信息
@@ -171,7 +172,7 @@ export default function Challenge(props: ChallengeProps) {
         address, abi, functionName: 'participate',
         args: [BigInt(shareRatio * 100)] // 转换为基点 (1% = 100)
       });
-      
+      await refetchState();
     } catch (error) {
       console.error('Error participating in challenge:', error);
     }
@@ -187,6 +188,7 @@ export default function Challenge(props: ChallengeProps) {
       });
       setIsSubmitModalOpen(false);
       setSubmitForm({ title: '', description: '', url: '' });
+      await refetchState();
     } catch (error) {
       console.error('Error submitting blog:', error);
     }
@@ -288,6 +290,24 @@ export default function Challenge(props: ChallengeProps) {
             currentCycle={Number(currentCycle)}
             avatarUrl="/images/player-avatar.svg"
           />
+          <AnimatePresence>
+            {isHovered && isConnected && isChallenger && !hasSubmittedCurrentCycle && (
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                onClick={() => setIsSubmitModalOpen(true)}
+                className="absolute bottom-4 right-4 pixel-button flex items-center justify-center gap-2"
+              >
+                {language === 'en' ? 'Submit Blog' : '提交博客'}
+              </motion.button>
+            )}
+            {isHovered && isConnected && hasSubmittedCurrentCycle && (
+              <div className="absolute bottom-4 right-4 text-center text-sm text-gray-500 py-2">
+                {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
+              </div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
 
@@ -328,7 +348,6 @@ export default function Challenge(props: ChallengeProps) {
               </div>
             </div>
           ))}
-          <div className="pt-2"/>
           <AnimatePresence>
             {isHovered && isConnected && participatable && !isParticipant && !isChallenger && (
               <motion.button
@@ -338,24 +357,8 @@ export default function Challenge(props: ChallengeProps) {
                 onClick={handleParticipate}
                 className="pixel-button flex items-center justify-center gap-2 w-full"
               >
-                {language === 'en' ? 'Participate' : '参与挑战'}
+                {language === 'en' ? 'Participate' : '参与'}
               </motion.button>
-            )}
-            {isHovered && isConnected && isChallenger && !hasSubmittedCurrentCycle && (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setIsSubmitModalOpen(true)}
-                className="pixel-button flex items-center justify-center gap-2 w-full"
-              >
-                {language === 'en' ? 'Submit Blog' : '提交博客'}
-              </motion.button>
-            )}
-            {isHovered && isConnected && hasSubmittedCurrentCycle && (
-              <div className="text-center text-sm text-gray-500 py-2">
-                {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
-              </div>
             )}
           </AnimatePresence>
         </div>
