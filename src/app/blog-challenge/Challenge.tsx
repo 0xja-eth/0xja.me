@@ -195,173 +195,224 @@ export default function Challenge(props: ChallengeProps) {
   };
 
   return (
-    <div className="flex gap-6" 
+    <div className="relative" 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex-1 bg-black/50 backdrop-blur-sm rounded-lg overflow-hidden space-y-6 border border-gray-800 relative group"
+        className="flex gap-6 w-full"
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        {/* Challenge Info */}
-        <div className="p-6 space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-2xl font-bold neon-text">
-                  Challenge #{id?.toString()}
-                </h3>
-                <div className="relative group">
-                  <button
-                    onClick={() => viewAddress(address)}
-                    className="p-2 rounded-lg bg-black/30 hover:bg-black/50 transition-colors text-gray-400 hover:text-gray-300"
-                    title={language === 'en' ? 'View on Explorer' : '在区块链浏览器中查看'}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                      <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <p className="text-gray-400 flex items-center gap-2">
-                {language === 'en' ? 'Challenger' : '挑战者'}: 
-                <div className="relative group flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full overflow-hidden">
-                    <Jazzicon diameter={20} seed={jsNumberForAddress(challenger || '')} />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className={`flex-1 bg-black/50 backdrop-blur-sm rounded-lg overflow-hidden border border-gray-800 relative group ${!isHovered ? 'h-fit' : ''}`}
+        >
+          {/* Challenge Info */}
+          <div className="p-6 space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-2xl font-bold neon-text">
+                    Challenge #{id?.toString()}
+                  </h3>
+                  <div className="relative group">
+                    <button
+                      onClick={() => viewAddress(address)}
+                      className="p-2 rounded-lg bg-black/30 hover:bg-black/50 transition-colors text-gray-400 hover:text-gray-300"
+                      title={language === 'en' ? 'View on Explorer' : '在区块链浏览器中查看'}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                      </svg>
+                    </button>
                   </div>
-                  <button
-                    onClick={() => viewAddress(challenger || '')}
-                    className="text-gray-300 hover:text-purple-300 transition-colors"
-                  >
-                    {challenger?.slice(0, 6)}...{challenger?.slice(-4)}
-                  </button>
                 </div>
-              </p>
+                <p className="text-gray-400 flex items-center gap-2">
+                  {language === 'en' ? 'Challenger' : '挑战者'}: 
+                  <div className="relative group flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full overflow-hidden">
+                      <Jazzicon diameter={20} seed={jsNumberForAddress(challenger || '')} />
+                    </div>
+                    <button
+                      onClick={() => viewAddress(challenger || '')}
+                      className="text-gray-300 hover:text-purple-300 transition-colors"
+                    >
+                      {challenger?.slice(0, 6)}...{challenger?.slice(-4)}
+                    </button>
+                  </div>
+                </p>
+              </div>
+
+              {/* Action Buttons - Always visible */}
+              {/* <div className="flex gap-2">
+                {!started && isChallenger && (
+                  <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    onClick={() => writeContractAsync({
+                      address, abi, functionName: 'start'
+                    })}
+                  >
+                    {language === 'en' ? 'Start' : '开始'}
+                  </button>
+                )}
+                {participatable && !isParticipant && (
+                  <button
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    onClick={handleParticipate}
+                  >
+                    {language === 'en' ? 'Participate' : '参与'}
+                  </button>
+                )}
+                {isParticipant && !hasSubmittedCurrentCycle && (
+                  <button
+                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+                    onClick={() => setIsSubmitModalOpen(true)}
+                  >
+                    {language === 'en' ? 'Submit' : '提交'}
+                  </button>
+                )}
+              </div> */}
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="bg-black/30 p-4 rounded-lg">
+                <div className="text-sm text-gray-400 mb-1">
+                  {language === 'en' ? 'Cycle Length' : '周期长度'}
+                </div>
+                <div className="text-xl font-bold neon-text">
+                  {formatTimeLeft(Number(cycle))}
+                </div>
+              </div>
+
+              <div className="bg-black/30 p-4 rounded-lg">
+                <div className="text-sm text-gray-400 mb-1">
+                  {language === 'en' ? 'Current Cycle' : '当前周期'}
+                </div>
+                <div className="text-xl font-bold neon-text">
+                  {currentCycleIndex + 1} / {totalCycles}
+                </div>
+              </div>
+
+              <div className="bg-black/30 p-4 rounded-lg">
+                <div className="text-sm text-gray-400 mb-1">
+                  {language === 'en' ? 'Participants' : '参与人数'}
+                </div>
+                <div className="text-xl font-bold neon-text">
+                  {participants?.length || 0} / {maxParticipants?.toString()}
+                </div>
+              </div>
+
+              <div className="bg-black/30 p-4 rounded-lg">
+                <div className="text-sm text-gray-400 mb-1">
+                  {language === 'en' ? 'Time Left' : '剩余时间'}
+                </div>
+                <div className="text-xl font-bold neon-text">
+                  {formatTimeLeft(timeLeft)}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="bg-black/30 p-4 rounded-lg">
-              <div className="text-sm text-gray-400 mb-1">
-                {language === 'en' ? 'Cycle Length' : '周期长度'}
-              </div>
-              <div className="text-xl font-bold neon-text">
-                {formatTimeLeft(Number(cycle))}
-              </div>
-            </div>
-
-            <div className="bg-black/30 p-4 rounded-lg">
-              <div className="text-sm text-gray-400 mb-1">
-                {language === 'en' ? 'Current Cycle' : '当前周期'}
-              </div>
-              <div className="text-xl font-bold neon-text">
-                {currentCycleIndex + 1} / {totalCycles}
-              </div>
-            </div>
-
-            <div className="bg-black/30 p-4 rounded-lg">
-              <div className="text-sm text-gray-400 mb-1">
-                {language === 'en' ? 'Participants' : '参与人数'}
-              </div>
-              <div className="text-xl font-bold neon-text">
-                {participants?.length || 0} / {maxParticipants?.toString()}
-              </div>
-            </div>
-
-            <div className="bg-black/30 p-4 rounded-lg">
-              <div className="text-sm text-gray-400 mb-1">
-                {language === 'en' ? 'Time Left' : '剩余时间'}
-              </div>
-              <div className="text-xl font-bold neon-text">
-                {formatTimeLeft(timeLeft)}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Map Section */}
-        <div className="h-[500px] relative bg-black/30 border-t border-gray-800">
-          <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10" />
-          <DungeonMap
-            submissions={blogSubmissions}
-            currentCycle={Number(currentCycle)}
-            avatarUrl="/images/player-avatar.svg"
-          />
+          {/* Map Section - Only visible when expanded */}
           <AnimatePresence>
-            {isHovered && isConnected && isChallenger && !hasSubmittedCurrentCycle && (
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                onClick={() => setIsSubmitModalOpen(true)}
-                className="absolute bottom-4 right-4 pixel-button flex items-center justify-center gap-2"
+            {isHovered && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                {language === 'en' ? 'Submit Blog' : '提交博客'}
-              </motion.button>
-            )}
-            {isHovered && isConnected && hasSubmittedCurrentCycle && (
-              <div className="absolute bottom-4 right-4 text-center text-sm text-gray-500 py-2">
-                {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
-              </div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-
-      {/* Participants List */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-72 bg-black/50 backdrop-blur-sm rounded-lg border border-gray-800 p-4"
-      >
-        <h4 className="text-lg font-bold mb-4 neon-text">
-          {language === 'en' ? 'Participants' : '参与者'}
-        </h4>
-        <div className="space-y-3">
-          {participants.filter((_, i) => i < 10).map((participant, index) => (
-            <div key={participant} className="relative overflow-hidden">
-              {/* Progress Bar Background */}
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${participantPercentages[index]}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+                <div className="h-[500px] relative bg-black/30 border-t border-gray-800">
+                  <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10" />
+                  <DungeonMap
+                    submissions={blogSubmissions}
+                    currentCycle={Number(currentCycle)}
+                    avatarUrl="/images/player-avatar.svg"
+                  />
+                  <AnimatePresence>
+                    {isHovered && isConnected && isChallenger && !hasSubmittedCurrentCycle && (
+                      <motion.button
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        onClick={() => setIsSubmitModalOpen(true)}
+                        className="absolute bottom-4 right-4 pixel-button flex items-center justify-center gap-2"
+                      >
+                        {language === 'en' ? 'Submit Blog' : '提交博客'}
+                      </motion.button>
+                    )}
+                    {isHovered && isConnected && hasSubmittedCurrentCycle && (
+                      <div className="absolute bottom-4 right-4 text-center text-sm text-gray-500 py-2">
+                        {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
+                      </div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </motion.div>
-              <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-black/30 transition-colors relative z-10">
-                <div className="flex-shrink-0">
-                  <Jazzicon diameter={24} seed={jsNumberForAddress(participant)} />
-                </div>
-                <div className="flex-1 min-w-0 flex justify-between items-center">
-                  <div className="text-sm text-gray-300 truncate">
-                    {participant}
-                  </div>
-                  <div className="text-xs font-medium text-gray-400 ml-2">
-                    {participantPercentages[index]?.toFixed(2)}%
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-          <AnimatePresence>
-            {isHovered && isConnected && participatable && !isParticipant && !isChallenger && (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={handleParticipate}
-                className="pixel-button flex items-center justify-center gap-2 w-full"
-              >
-                {language === 'en' ? 'Participate' : '参与'}
-              </motion.button>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
+
+        {/* Participants List - Only visible when expanded */}
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: '288px' }}
+              exit={{ opacity: 0, width: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-black/50 backdrop-blur-sm rounded-lg border border-gray-800 p-4 overflow-hidden"
+            >
+              <h4 className="text-lg font-bold mb-4 neon-text">
+                {language === 'en' ? 'Participants' : '参与者'}
+              </h4>
+              <div className="space-y-3">
+                {participants.filter((_, i) => i < 10).map((participant, index) => (
+                  <div key={participant} className="relative overflow-hidden">
+                    {/* Progress Bar Background */}
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${participantPercentages[index]}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                      className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+                    </motion.div>
+                    <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-black/30 transition-colors relative z-10">
+                      <div className="flex-shrink-0">
+                        <Jazzicon diameter={24} seed={jsNumberForAddress(participant)} />
+                      </div>
+                      <div className="flex-1 min-w-0 flex justify-between items-center">
+                        <div className="text-sm text-gray-300 truncate">
+                          {participant}
+                        </div>
+                        <div className="text-xs font-medium text-gray-400 ml-2">
+                          {participantPercentages[index]?.toFixed(2)}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <AnimatePresence>
+                  {isHovered && isConnected && participatable && !isParticipant && !isChallenger && (
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={handleParticipate}
+                      className="pixel-button flex items-center justify-center gap-2 w-full"
+                    >
+                      {language === 'en' ? 'Participate' : '参与'}
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Submit Modal */}
