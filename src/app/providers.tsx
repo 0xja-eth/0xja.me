@@ -11,16 +11,14 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-import { mainnet, arbitrum, optimism, polygon, base, bsc } from 'wagmi/chains';
+import { SupportedChains } from "@/contracts";
 
 const queryClient = new QueryClient();
 
 export const config = getDefaultConfig({
   appName: 'Axon AI',
   projectId: 'a1fc63f578160e84914e2f3788fc6c58',
-  chains: [
-    mainnet, arbitrum, optimism, polygon, base, bsc
-  ],
+  chains: SupportedChains,
   ssr: true,
 });
 

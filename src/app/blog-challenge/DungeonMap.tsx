@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { BlogSubmission } from './Challenge';
 import './dungeon.css';
 
 interface Position {
@@ -12,13 +13,11 @@ interface Monster {
   position: Position;
   state: 'standby' | 'active' | 'damaged';
   blogUrl?: string;
+  submission?: BlogSubmission;
 }
 
 interface DungeonMapProps {
-  submissions: Array<{
-    url: string;
-    timestamp: number;
-  }>;
+  submissions: BlogSubmission[];
   currentCycle: number;
   avatarUrl: string;
 }
@@ -32,6 +31,11 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   const [player, setPlayer] = useState<Position>({ x: 50, y: 50 });
   const [monsters, setMonsters] = useState<Monster[]>([]);
   const [path, setPath] = useState<string>('');
+  const [hoveredMonster, setHoveredMonster] = useState<Monster | null>(null);
+
+  // 拖拽状态
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
   // 生成地下城路径
   useEffect(() => {
@@ -68,8 +72,9 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
       position: pos,
       state: i < submissions.length ? 'damaged' : 
              i === submissions.length ? 'active' : 'standby',
-      blogUrl: submissions[i]?.url
-    }));
+      blogUrl: submissions[i]?.url || '',
+      submission: submissions[i]
+    } as Monster));
     
     setMonsters(newMonsters);
     
@@ -78,121 +83,103 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
     if (currentMonster) {
       setPlayer(currentMonster.position);
     }
-  }, [submissions, mapRef.current]);
+  }, [submissions.length]);
 
-  // 生成装饰元素
-  const decorations = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    type: ['crystal', 'gear', 'energy-dot', 'circuit'][i % 4],
-    position: {
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      transform: `scale(${0.5 + Math.random() * 0.5})`,
-      opacity: 0.3 + Math.random() * 0.4
-    }
-  }));
+  // 格式化时间
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleDateString();
+  };
 
   return (
-    <div className="dungeon-map" ref={mapRef}>
+    <motion.div 
+      ref={mapRef}
+      className="w-full h-full relative overflow-hidden cursor-grab active:cursor-grabbing"
+      drag
+      dragConstraints={mapRef}
+      style={{ x, y }}
+    >
       {/* 路径 */}
-      <svg className="dungeon-path">
-        <path d={path} className="path-line" fill="none" />
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        <path
+          d={path}
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth="4"
+          fill="none"
+        />
       </svg>
-      
-      {/* 装饰 */}
-      {decorations.map(dec => (
-        <div
-          key={dec.id}
-          className="dungeon-decoration"
-          style={{
-            position: 'absolute',
-            ...dec.position,
-            zIndex: 1,
-            pointerEvents: 'none'
-          }}
-        >
-          <img
-            src={`/images/dungeon-decorations.svg#${dec.type}`}
-            alt="decoration"
-            width={32}
-            height={32}
-          />
-        </div>
-      ))}
-      
-      {/* 怪物 */}
-      {monsters.map(monster => (
+
+      {/* 怪物和玩家 */}
+      {monsters.map((monster) => (
         <motion.div
           key={monster.id}
-          className={`mechanical-monster monster-${monster.state}`}
-          initial={{ scale: 0 }}
-          animate={{ 
-            scale: 1,
-            x: monster.position.x - 32,
-            y: monster.position.y - 32,
+          className="absolute"
+          style={{
+            x: monster.position.x - 20,
+            y: monster.position.y - 20,
           }}
-          transition={{
-            type: "spring",
-            stiffness: 200,
-            damping: 20
-          }}
+          onHoverStart={() => setHoveredMonster(monster)}
+          onHoverEnd={() => setHoveredMonster(null)}
         >
-          <img
-            src={`/images/monster-${monster.state}.svg`}
-            alt={`Monster ${monster.state}`}
-            width={64}
-            height={64}
-          />
-          {monster.blogUrl && (
+          <div 
+            className={`w-10 h-10 rounded-lg relative ${
+              monster.state === 'damaged' ? 'bg-green-500/30' :
+              monster.state === 'active' ? 'bg-yellow-500/30' :
+              'bg-gray-500/30'
+            }`}
+          >
+            {monster.state === 'damaged' && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-3 h-3 bg-green-400 rounded-full" />
+              </div>
+            )}
+          </div>
+
+          {/* 悬停提示框 */}
+          {hoveredMonster === monster && monster.submission && (
             <motion.div
-              className="blog-card"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              className="absolute left-12 top-0 w-64 bg-black/90 backdrop-blur-sm rounded-lg p-4 border border-gray-800 z-50"
             >
-              <a
-                href={monster.blogUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-purple-200 hover:text-purple-100 transition-colors"
-              >
-                View Blog
-              </a>
+              <h4 className="text-lg font-bold text-white mb-2 truncate">
+                {monster.submission.title}
+              </h4>
+              <p className="text-sm text-gray-400 mb-2 line-clamp-2">
+                {monster.submission.description}
+              </p>
+              <div className="text-xs text-gray-500">
+                {formatDate(monster.submission.timestamp)}
+              </div>
+              {monster.blogUrl && (
+                <a
+                  href={monster.blogUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 block text-sm text-blue-400 hover:text-blue-300 truncate"
+                >
+                  查看文章
+                </a>
+              )}
             </motion.div>
           )}
         </motion.div>
       ))}
-      
+
       {/* 玩家 */}
       <motion.div
-        className="player"
-        animate={{
-          x: player.x - 24,
-          y: player.y - 24,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 100,
-          damping: 20
+        className="absolute w-10 h-10"
+        style={{
+          x: player.x - 20,
+          y: player.y - 20,
         }}
       >
-        <motion.img
+        <img
           src={avatarUrl}
           alt="Player"
-          width={48}
-          height={48}
-          style={{ borderRadius: '50%' }}
-          animate={{
-            scale: [1, 1.1, 1],
-            rotate: [0, 5, -5, 0]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
+          className="w-full h-full object-contain"
         />
       </motion.div>
-    </div>
+    </motion.div>
   );
 };

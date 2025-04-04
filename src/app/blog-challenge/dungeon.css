@@ -6,10 +6,10 @@
 
 /* 地下城地图样式 */
 .dungeon-map {
-  width: 100%;
-  height: 100vh;
+  background: #1a1a2e;
   position: relative;
-  background: linear-gradient(to bottom, #0f172a, #1e293b);
+  min-height: 600px;
+  padding: 2rem;
   overflow: hidden;
 }
 
@@ -18,73 +18,81 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
 .path-line {
-  stroke: rgba(129, 230, 217, 0.3);
+  stroke: #4a5568;
   stroke-width: 4;
-  stroke-dasharray: 10;
-  animation: path-flow 20s linear infinite;
-  filter: drop-shadow(0 0 8px rgba(129, 230, 217, 0.2));
-}
-
-@keyframes path-flow {
-  from {
-    stroke-dashoffset: 1000;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
+  stroke-dasharray: 8;
+  animation: pathAnimation 30s linear infinite;
 }
 
 /* 机械怪物 */
 .mechanical-monster {
-  position: absolute;
   width: 64px;
   height: 64px;
-  z-index: 2;
+  position: absolute;
+  transform-origin: center;
+  transition: all 0.5s ease;
 }
 
-.monster-standby img {
+.monster-standby {
   filter: grayscale(0.7) brightness(0.7);
+  animation: standbyPulse 2s ease-in-out infinite;
 }
 
-.monster-active img {
-  filter: drop-shadow(0 0 10px rgba(129, 230, 217, 0.5));
+.monster-active {
+  filter: none;
+  animation: activeGlow 1s ease-in-out infinite;
 }
 
-.monster-damaged img {
-  filter: sepia(0.5) hue-rotate(300deg);
+.monster-damaged {
+  filter: grayscale(1) brightness(0.5);
+  transform: rotate(15deg);
 }
 
 /* 主角 */
 .player {
-  position: absolute;
   width: 48px;
   height: 48px;
-  z-index: 3;
-  filter: drop-shadow(0 0 15px rgba(129, 230, 217, 0.3));
+  position: absolute;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.player img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* 动画 */
+@keyframes pathAnimation {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes standbyPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes activeGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
 }
 
 /* 博客卡片 */
 .blog-card {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(8px);
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(129, 230, 217, 0.2);
-  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.blog-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 /* 像素装饰 */
