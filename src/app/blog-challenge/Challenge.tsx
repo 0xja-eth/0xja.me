@@ -360,7 +360,7 @@ export default function Challenge(props: ChallengeProps) {
                       </div>
                     </div>
                     <div className="mt-2 flex items-center justify-between text-base">
-                      <span className="text-gray-400">{language === 'en' ? 'Cycle Time Left' : '当前周期剩余时间'}</span>
+                      <span className="text-gray-400">{language === 'en' ? 'Current Cycle Time Left' : '当前周期剩余时间'}</span>
                       <span className="text-purple-400 font-medium">{formatTimeLeft(timeLeft)}</span>
                     </div>
                   </div>
