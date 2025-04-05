@@ -126,6 +126,7 @@ body {
     background-color: theme('colors.indigo.600');
     transform: scale(1.05);
     box-shadow: var(--neon-glow);
+    color: white !important;
   }
 
   /* 打赏按钮动画 */

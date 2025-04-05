@@ -19,6 +19,9 @@ export const ContractAddresses: Record<number, Record<string, `0x${string}`>> = 
 }
 
 export const SupportedChains = [mainnet, arbitrum, optimism, polygon, base, bsc, optimismSepolia] as const;
+export const BlogChallengeSupportedChains = Object.keys(ContractAddresses).map(chainId => 
+    SupportedChains.find(chain => chain.id === Number(chainId))
+).filter(Boolean);
 
 export function useContract<T extends keyof typeof ContractABIs>(chainId: number, name: T, address?: `0x${string}`) {
     address ||= ContractAddresses[chainId]?.[name];

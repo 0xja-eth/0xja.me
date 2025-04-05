@@ -507,7 +507,7 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
                             {s === 2 && (language === 'en' ? 'Approve' : '授权')}
                             {s === 3 && (language === 'en' ? 'Deposit' : '存入')}
                           </div>
-                          {s < 3 && (
+                          {s <= 3 && (
                             <div className={`h-[2px] w-full mt-4 ${
                               s < step ? 'bg-green-500' : 'bg-white/5'
                             }`} />
