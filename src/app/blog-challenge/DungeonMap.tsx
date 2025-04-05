@@ -155,7 +155,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
         x: Math.max(margin, Math.min(width - margin, pos.x)),
         y: Math.max(margin, Math.min(height - margin, pos.y))
       },
-      state: i < currentCycleIdx ? 'damaged' : 
+      state: i < currentCycleIdx || submissions.find(blog => blog.cycle === i + 1) ? 'damaged' : 
              i === currentCycleIdx ? 'active' : 'standby',
       blogs: submissions.filter((blog) => blog.cycle === i + 1),
     } as Monster));
@@ -175,7 +175,14 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   // 格式化时间
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp * 1000);
-    return date.toLocaleDateString();
+    return date.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
   };
 
   return (
@@ -249,7 +256,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
       </div>
 
       {/* 固定侧边信息面板 */}
-      {(hoveredMonster || selectedMonster) && (hoveredMonster?.blogs.length || selectedMonster?.blogs.length) && (
+      {(hoveredMonster || selectedMonster) && (((hoveredMonster?.blogs?.length ?? 0) > 0) || ((selectedMonster?.blogs?.length ?? 0) > 0)) && (
         <motion.div
           initial={{ opacity: 0, x: hoveredMonster?.position.x || selectedMonster?.position.x! > mapRef.current?.clientWidth! / 2 ? -20 : 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -276,7 +283,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
           </div>
           
           {/* 内容区域 */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex-1 overflow-y-auto custom-scrollbar font-sans">
             <div className="p-4">
               <div className="space-y-4">
                 {(hoveredMonster || selectedMonster)!.blogs.map((blog, index) => (
@@ -285,7 +292,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
                     className={`rounded-lg bg-white/5 p-4 hover:bg-white/10 transition-colors`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <h4 className="text-base font-medium text-white truncate flex-1">
+                      <h4 className="font-medium text-white truncate flex-1 text-2xl">
                         {blog.title}
                       </h4>
                       {blog.url && (
@@ -303,10 +310,10 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
                         </a>
                       )}
                     </div>
-                    <p className="text-sm text-gray-400 mb-2 line-clamp-2">
+                    <p className="text-xl text-gray-400 mb-2 line-clamp-2">
                       {blog.description}
                     </p>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-sm text-gray-500">
                       {formatDate(blog.timestamp)}
                     </div>
                   </div>

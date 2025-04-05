@@ -8,6 +8,7 @@ import { CHALLENGE_FACTORY_ABI } from '@/contracts/ChallengeFactory';
 import { parseEther } from 'ethers';
 import DynamicBackground from '@/components/DynamicBackground';
 import Challenge from './Challenge';
+import CreateChallengeModal from './CreateChallengeModal';
 
 import './crystal-overlay.css';
 import { ContractAddresses, useContract } from '@/contracts';
@@ -42,13 +43,6 @@ export default function BlogChallenge() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [createForm, setCreateForm] = useState<ChallengeForm>({
-    startTime: '',
-    cycle: '',
-    numberOfCycles: '',
-    penaltyAmount: '',
-    maxParticipants: ''
-  });
 
   const { address, abi, isValidChain } = useContract(chainId as number, 'ChallengeFactory');
 
@@ -127,12 +121,12 @@ export default function BlogChallenge() {
   const filteredChallenges = challenges
     .filter((address, i) => {
       if (!address) return false;
-      const [, challenger] = challengeInfos?.[i] ?? [];
-      const [, isStarted] = challengeStates?.[i] ?? [];
+      const [, challenger, , , , , penaltyAmount] = challengeInfos?.[i] ?? [];
+      const [, isStarted, , , , deposit, isChallengerApproved] = challengeStates?.[i] ?? [];
       
       let flag = true
       switch (filter) {
-        case 'all': flag &&= isStarted; break;
+        case 'all': flag &&= isStarted && isChallengerApproved && deposit >= (penaltyAmount ?? 0n) * 3n; break;
         case 'participating': flag &&= challengeBalances[i] > 0; break;
         case 'created': flag &&= addrEq(challenger, userAddress!); break;
       }
@@ -145,32 +139,30 @@ export default function BlogChallenge() {
     .reverse()
     .slice(0, displayCount);
 
-  // 创建新挑战
-  const handleCreateChallenge = async () => {
-    if (!isConnected) return;
+  // // 创建新挑战
+  // const createChallenge = async (data: any) => {
+  //   if (!isConnected) return;
     
-    try {
-      const startTimestamp = Math.floor(new Date(createForm.startTime).getTime() / 1000);
+  //   try {
+  //     await writeContractAsync({
+  //       address, abi, functionName: 'createChallenge',
+  //       args: [
+  //         BigInt(data.startTime),
+  //         BigInt(data.cycle),
+  //         BigInt(data.numberOfCycles),
+  //         ContractAddresses[chainId as number].USDT,
+  //         data.penaltyAmount,
+  //         BigInt(data.maxParticipants),
+  //         true, true
+  //       ]
+  //     });
       
-      await writeContractAsync({
-        address, abi, functionName: 'createChallenge',
-        args: [
-          BigInt(startTimestamp),
-          BigInt(createForm.cycle),
-          BigInt(createForm.numberOfCycles),
-          ContractAddresses[chainId as number].USDT,
-          parseEther(createForm.penaltyAmount),
-          BigInt(createForm.maxParticipants),
-          true, true
-        ]
-      });
-      
-      setIsCreateModalOpen(false);
-      fetchChallenges();
-    } catch (error) {
-      console.error('Error creating challenge:', error);
-    }
-  };
+  //     setIsCreateModalOpen(false);
+  //     fetchChallenges();
+  //   } catch (error) {
+  //     console.error('Error creating challenge:', error);
+  //   }
+  // };
 
   return (
     <main className="min-h-screen p-8 pt-20">
@@ -248,90 +240,27 @@ export default function BlogChallenge() {
       </div>
 
       {/* Create Challenge Modal */}
-      {isCreateModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-black/80 p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-2xl font-bold mb-6 crystal-text">
-              {language === 'en' ? 'Create New Challenge' : '创建新挑战'}
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block mb-2 crystal-text">
-                  {language === 'en' ? 'Start Time' : '开始时间'}
-                </label>
-                <input
-                  type="datetime-local"
-                  value={createForm.startTime}
-                  onChange={e => setCreateForm(prev => ({ ...prev, startTime: e.target.value }))}
-                  className="w-full bg-black/50 p-2 rounded crystal-text"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 crystal-text">
-                  {language === 'en' ? 'Cycle (seconds)' : '周期（秒）'}
-                </label>
-                <input
-                  type="number"
-                  value={createForm.cycle}
-                  onChange={e => setCreateForm(prev => ({ ...prev, cycle: e.target.value }))}
-                  className="w-full bg-black/50 p-2 rounded crystal-text"
-                  placeholder="604800 (1 week)"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 crystal-text">
-                  {language === 'en' ? 'Number of Cycles' : '周期数'}
-                </label>
-                <input
-                  type="number"
-                  value={createForm.numberOfCycles}
-                  onChange={e => setCreateForm(prev => ({ ...prev, numberOfCycles: e.target.value }))}
-                  className="w-full bg-black/50 p-2 rounded crystal-text"
-                  placeholder="4"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 crystal-text">
-                  {language === 'en' ? 'Penalty Amount (USDT)' : '惩罚金额（USDT）'}
-                </label>
-                <input
-                  type="number"
-                  value={createForm.penaltyAmount}
-                  onChange={e => setCreateForm(prev => ({ ...prev, penaltyAmount: e.target.value }))}
-                  className="w-full bg-black/50 p-2 rounded crystal-text"
-                  placeholder="100"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 crystal-text">
-                  {language === 'en' ? 'Max Participants' : '最大参与人数'}
-                </label>
-                <input
-                  type="number"
-                  value={createForm.maxParticipants}
-                  onChange={e => setCreateForm(prev => ({ ...prev, maxParticipants: e.target.value }))}
-                  className="w-full bg-black/50 p-2 rounded crystal-text"
-                  placeholder="10"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end space-x-4 mt-6">
-              <button
-                onClick={() => setIsCreateModalOpen(false)}
-                className="crystal-button px-4 py-2"
-              >
-                {language === 'en' ? 'Cancel' : '取消'}
-              </button>
-              <button
-                onClick={handleCreateChallenge}
-                className="crystal-button px-4 py-2"
-              >
-                {language === 'en' ? 'Create' : '创建'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreateChallengeModal
+        isOpen={isCreateModalOpen}
+        onClose={() => {
+          fetchChallenges();
+          setIsCreateModalOpen(false)
+        }}
+        // onSubmit={async (data) => {
+        //   try {
+        //     await createChallenge({
+        //       startTime: new Date(data.startTime).getTime() / 1000,
+        //       cycle: Number(data.cycle),
+        //       numberOfCycles: Number(data.numberOfCycles),
+        //       maxParticipants: Number(data.maxParticipants),
+        //       penaltyAmount: parseEther(data.penaltyAmount)
+        //     })
+        //     setIsCreateModalOpen(false)
+        //   } catch (e) {
+        //     console.error(e)
+        //   }
+        // }}
+      />
     </main>
   );
 }
