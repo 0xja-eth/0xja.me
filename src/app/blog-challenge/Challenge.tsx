@@ -365,6 +365,43 @@ export default function Challenge(props: ChallengeProps) {
                     </div>
                   </div>
 
+                  {/* Participants Info - Only visible when not expanded */}
+                  {!isExpanded && (
+                    <div className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
+                      <div className="text-base font-bold text-gray-400 mb-2 group-hover:text-purple-300 transition-colors">
+                        {language === 'en' ? 'Participants' : '参与者'}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                          {participantsCount?.toString() || '0'}/{maxParticipants?.toString()}
+                        </div>
+                        <div className="flex items-center -space-x-2">
+                          {[...Array(3)].map((_, index) => {
+                            const participant = participants[index];
+                            return (
+                              <div
+                                key={index}
+                                className="relative w-[24px] h-[24px]"
+                                style={{ opacity: 1 - index * 0.2 }}
+                              >
+                                {participant ? (
+                                  <Jazzicon
+                                    diameter={24}
+                                    seed={jsNumberForAddress(participant)}
+                                    paperStyles={{ borderRadius: '50%' }}
+                                  />
+                                ) : (
+                                  <div
+                                    className="w-[24px] h-[24px] rounded-full bg-gray-700/50"
+                                  />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   {/* <div className="col-span-5 grid grid-rows-1 gap-4">
                     <div className="bg-white/5 p-3 rounded-xl border border-white/10">
                       <div className="flex items-center justify-between mb-2">
