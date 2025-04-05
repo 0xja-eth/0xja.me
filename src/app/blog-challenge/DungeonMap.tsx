@@ -181,11 +181,11 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   return (
     <motion.div
       ref={mapRef}
-      className="relative w-full h-full overflow-hidden"
+      className="relative w-full h-full overflow-x-scroll"
     >
       {/* 路径 */}
       <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
+        className="absolute inset-0 w-[calc(100vw-256px)] h-full pointer-events-none"
         style={{ zIndex: 1 }}
       >
         <path
@@ -246,75 +246,76 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
           />
         </motion.div>
 
-        {/* 固定侧边信息面板 */}
-        {(hoveredMonster || selectedMonster) && (hoveredMonster?.blogs.length || selectedMonster?.blogs.length) && (
-          <motion.div
-            initial={{ opacity: 0, x: hoveredMonster?.position.x || selectedMonster?.position.x! > mapRef.current?.clientWidth! / 2 ? -20 : 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className={`absolute top-4 bottom-4 w-96 rounded-xl border border-white/10 shadow-2xl
-              overflow-hidden flex flex-col backdrop-blur-xl transition-colors duration-200
-              ${selectedMonster ? 'bg-black' : 'bg-black/75 hover:bg-black/85'}`}
-            style={{ 
-              zIndex: 1000,
-              left: (hoveredMonster?.position.x || selectedMonster?.position.x)! > mapRef.current?.clientWidth! / 2 ? '1rem' : 'auto',
-              right: (hoveredMonster?.position.x || selectedMonster?.position.x)! > mapRef.current?.clientWidth! / 2 ? 'auto' : '1rem',
-            }}
-          >
-            {/* Mac 窗口标题栏 */}
-            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[0.06] bg-black/30">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-                <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-                <div className="w-3 h-3 rounded-full bg-[#28C840]" />
-              </div>
-              <div className="text-sm text-gray-400 ml-2 flex-1 text-center">
-                {`Cycle ${(hoveredMonster || selectedMonster)!.blogs[0].cycle}`}
-              </div>
-              <div className="w-16" />
-            </div>
-            
-            {/* 内容区域 */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
-              <div className="p-4">
-                <div className="space-y-4">
-                  {(hoveredMonster || selectedMonster)!.blogs.map((blog, index) => (
-                    <div 
-                      key={index}
-                      className={`rounded-lg bg-white/5 p-4 hover:bg-white/10 transition-colors`}
-                    >
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <h4 className="text-base font-medium text-white truncate flex-1">
-                          {blog.title}
-                        </h4>
-                        {blog.url && (
-                          <a
-                            href={blog.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-gray-300"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                              <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                            </svg>
-                          </a>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-400 mb-2 line-clamp-2">
-                        {blog.description}
-                      </p>
-                      <div className="text-xs text-gray-500">
-                        {formatDate(blog.timestamp)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
       </div>
+
+      {/* 固定侧边信息面板 */}
+      {(hoveredMonster || selectedMonster) && (hoveredMonster?.blogs.length || selectedMonster?.blogs.length) && (
+        <motion.div
+          initial={{ opacity: 0, x: hoveredMonster?.position.x || selectedMonster?.position.x! > mapRef.current?.clientWidth! / 2 ? -20 : 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className={`absolute top-4 bottom-4 w-96 rounded-xl border border-white/10 shadow-2xl
+            overflow-hidden flex flex-col backdrop-blur-xl transition-colors duration-200
+            ${selectedMonster ? 'bg-black' : 'bg-black/75 hover:bg-black/85'}`}
+          style={{ 
+            zIndex: 1000,
+            left: (hoveredMonster?.position.x || selectedMonster?.position.x)! > mapRef.current?.clientWidth! / 2 ? '1rem' : 'auto',
+            right: (hoveredMonster?.position.x || selectedMonster?.position.x)! > mapRef.current?.clientWidth! / 2 ? 'auto' : '1rem',
+          }}
+        >
+          {/* Mac 窗口标题栏 */}
+          <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[0.06] bg-black/30">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+              <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+              <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+            </div>
+            <div className="text-sm text-gray-400 ml-2 flex-1 text-center">
+              {`Cycle ${(hoveredMonster || selectedMonster)!.blogs[0].cycle}`}
+            </div>
+            <div className="w-16" />
+          </div>
+          
+          {/* 内容区域 */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <div className="p-4">
+              <div className="space-y-4">
+                {(hoveredMonster || selectedMonster)!.blogs.map((blog, index) => (
+                  <div 
+                    key={index}
+                    className={`rounded-lg bg-white/5 p-4 hover:bg-white/10 transition-colors`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <h4 className="text-base font-medium text-white truncate flex-1">
+                        {blog.title}
+                      </h4>
+                      {blog.url && (
+                        <a
+                          href={blog.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-gray-300"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-400 mb-2 line-clamp-2">
+                      {blog.description}
+                    </p>
+                    <div className="text-xs text-gray-500">
+                      {formatDate(blog.timestamp)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };

@@ -34,8 +34,8 @@ export default function Challenge(props: ChallengeProps) {
   
   const [blogSubmissions, setBlogSubmissions] = useState<BlogSubmission[]>([]);
   const [shareRatio, setShareRatio] = useState(50); // 默认50%
-  const [error, setError] = useState<Error | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isPinned, setPinned] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [submitForm, setSubmitForm] = useState({
     title: '',
@@ -196,8 +196,8 @@ export default function Challenge(props: ChallengeProps) {
 
   return (
     <div className="relative" 
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => !isPinned && setIsHovered(true)}
+      onMouseLeave={() => !isPinned && setIsHovered(false)}
     >
       <motion.div
         className="flex gap-6 w-full"
@@ -207,118 +207,152 @@ export default function Challenge(props: ChallengeProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={`flex-1 bg-black/50 backdrop-blur-sm rounded-lg overflow-hidden border border-gray-800 relative group ${!isHovered ? 'h-fit' : ''}`}
+          className={`flex-1 bg-gradient-to-br from-black/60 to-black/40 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-800/50 relative group hover:border-purple-500/30 transition-all duration-300 ${!isHovered && !isPinned ? 'h-fit shadow-lg' : 'shadow-2xl'}`}
         >
+          {/* Pin Button */}
+          {isHovered && <button
+            onClick={() => setPinned(!isPinned)}
+            className={`absolute top-4 right-4 rounded-lg backdrop-blur-sm border w-8 h-8 flex items-center justify-center
+              ${isPinned 
+                ? 'bg-purple-500/20 text-purple-300 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.3)]' 
+                : 'bg-black/20 text-gray-400 border-gray-700/50 hover:bg-black/40 hover:text-gray-300'} 
+              transition-all duration-300 z-50 transform hover:scale-110`}
+            title={language === 'en' ? (isPinned ? 'Unpin' : 'Pin') : (isPinned ? '取消固定' : '固定')}
+          >
+            📌
+          </button>}
+
           {/* Challenge Info */}
           <div className="p-6 space-y-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-2xl font-bold neon-text">
-                    Challenge #{id?.toString()}
-                  </h3>
-                  <div className="relative group">
-                    <button
-                      onClick={() => viewAddress(address)}
-                      className="p-2 rounded-lg bg-black/30 hover:bg-black/50 transition-colors text-gray-400 hover:text-gray-300"
-                      title={language === 'en' ? 'View on Explorer' : '在区块链浏览器中查看'}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                <p className="text-gray-400 flex items-center gap-2">
-                  {language === 'en' ? 'Challenger' : '挑战者'}: 
-                  <div className="relative group flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full overflow-hidden">
-                      <Jazzicon diameter={20} seed={jsNumberForAddress(challenger || '')} />
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                      Challenge #{id?.toString()}
+                    </h3>
+                    <div className="relative group">
+                      <button
+                        onClick={() => viewAddress(address)}
+                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-gray-400 hover:text-gray-300 border border-white/10"
+                        title={language === 'en' ? 'View on Explorer' : '在区块链浏览器中查看'}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                          <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                        </svg>
+                      </button>
                     </div>
-                    <button
-                      onClick={() => viewAddress(challenger || '')}
-                      className="text-gray-300 hover:text-purple-300 transition-colors"
-                    >
-                      {challenger?.slice(0, 6)}...{challenger?.slice(-4)}
-                    </button>
                   </div>
-                </p>
-              </div>
+                  
+                  {/* USDT Penalty Amount */}
+                  <div className="flex items-center gap-2 bg-[#26A17B]/10 px-3 py-1.5 rounded-full border border-[#26A17B]/30 shadow-[0_0_15px_rgba(38,161,123,0.1)]">
+                    <div className="w-5 h-5 rounded-full bg-[#26A17B] flex items-center justify-center shadow-lg">
+                      <span className="text-[10px] font-bold text-white">$</span>
+                    </div>
+                    <span className="text-lg font-bold text-[#26A17B]">
+                      {formatEther(penaltyAmount)}
+                    </span>
+                    <span className="text-sm text-[#26A17B]/80">USDT</span>
+                  </div>
+                </div>
 
-              {/* Action Buttons - Always visible */}
-              {/* <div className="flex gap-2">
-                {!started && isChallenger && (
-                  <button
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    onClick={() => writeContractAsync({
-                      address, abi, functionName: 'start'
-                    })}
-                  >
-                    {language === 'en' ? 'Start' : '开始'}
-                  </button>
-                )}
-                {participatable && !isParticipant && (
-                  <button
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    onClick={handleParticipate}
-                  >
-                    {language === 'en' ? 'Participate' : '参与'}
-                  </button>
-                )}
-                {isParticipant && !hasSubmittedCurrentCycle && (
-                  <button
-                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
-                    onClick={() => setIsSubmitModalOpen(true)}
-                  >
-                    {language === 'en' ? 'Submit' : '提交'}
-                  </button>
-                )}
-              </div> */}
-            </div>
+                <div className="flex items-center gap-6">
+                  {/* Challenger Info */}
+                  <div className="flex items-center gap-2 text-sm bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                    <span className="text-gray-400">{language === 'en' ? 'By' : '发起者'}</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full overflow-hidden ring-2 ring-white/10">
+                        <Jazzicon diameter={20} seed={jsNumberForAddress(challenger || '')} />
+                      </div>
+                      <button
+                        onClick={() => viewAddress(challenger || '')}
+                        className="text-gray-300 hover:text-purple-300 transition-colors"
+                      >
+                        {challenger?.slice(0, 6)}...{challenger?.slice(-4)}
+                      </button>
+                    </div>
+                  </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="bg-black/30 p-4 rounded-lg">
-                <div className="text-sm text-gray-400 mb-1">
-                  {language === 'en' ? 'Cycle Length' : '周期长度'}
-                </div>
-                <div className="text-xl font-bold neon-text">
-                  {formatTimeLeft(Number(cycle))}
-                </div>
-              </div>
-
-              <div className="bg-black/30 p-4 rounded-lg">
-                <div className="text-sm text-gray-400 mb-1">
-                  {language === 'en' ? 'Current Cycle' : '当前周期'}
-                </div>
-                <div className="text-xl font-bold neon-text">
-                  {currentCycleIndex + 1} / {totalCycles}
-                </div>
-              </div>
-
-              <div className="bg-black/30 p-4 rounded-lg">
-                <div className="text-sm text-gray-400 mb-1">
-                  {language === 'en' ? 'Participants' : '参与人数'}
-                </div>
-                <div className="text-xl font-bold neon-text">
-                  {participants?.length || 0} / {maxParticipants?.toString()}
-                </div>
-              </div>
-
-              <div className="bg-black/30 p-4 rounded-lg">
-                <div className="text-sm text-gray-400 mb-1">
-                  {language === 'en' ? 'Time Left' : '剩余时间'}
-                </div>
-                <div className="text-xl font-bold neon-text">
-                  {formatTimeLeft(timeLeft)}
+                  {/* Time Info */}
+                  <div className="flex items-center gap-3 text-sm bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <span className="text-gray-300">{new Date(Number(startTime) * 1000).toLocaleDateString()}</span>
+                    </div>
+                    <span className="text-gray-500">→</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <span className="text-gray-300">
+                        {new Date(Number(startTime) * 1000 + Number(cycle) * Number(numberOfCycles) * 1000).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Stats Grid */}
+            <AnimatePresence>
+              {(isHovered || isPinned) && 
+              
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
+                    <div className="text-sm text-gray-400 mb-2 group-hover:text-purple-300 transition-colors">
+                      {language === 'en' ? 'Cycle Length' : '周期长度'}
+                    </div>
+                    <div className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                      {formatTimeLeft(Number(cycle))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
+                    <div className="text-sm text-gray-400 mb-2 group-hover:text-purple-300 transition-colors">
+                      {language === 'en' ? 'Current Cycle' : '当前周期'}
+                    </div>
+                    <div className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                      {currentCycleIndex + 1} / {totalCycles}
+                    </div>
+                  </div>
+
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
+                    <div className="text-sm text-gray-400 mb-2 group-hover:text-purple-300 transition-colors">
+                      {language === 'en' ? 'Participants' : '参与人数'}
+                    </div>
+                    <div className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                      {participants?.length || 0} / {maxParticipants?.toString()}
+                    </div>
+                  </div>
+
+                  <div className="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
+                    <div className="text-sm text-gray-400 mb-2 group-hover:text-purple-300 transition-colors">
+                      {language === 'en' ? 'Time Left' : '剩余时间'}
+                    </div>
+                    <div className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                      {formatTimeLeft(timeLeft)}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>}
+            </AnimatePresence>
           </div>
-
-          {/* Map Section - Only visible when expanded */}
+          {/* Only show DungeonMap when expanded */}
           <AnimatePresence>
-            {isHovered && (
+            {(isHovered || isPinned) && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
@@ -333,18 +367,18 @@ export default function Challenge(props: ChallengeProps) {
                     avatarUrl="/images/player-avatar.svg"
                   />
                   <AnimatePresence>
-                    {isHovered && isConnected && isChallenger && !hasSubmittedCurrentCycle && (
+                    {(isHovered || isPinned) && isConnected && isChallenger && !hasSubmittedCurrentCycle && (
                       <motion.button
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         onClick={() => setIsSubmitModalOpen(true)}
                         className="absolute bottom-4 right-4 pixel-button flex items-center justify-center gap-2"
                       >
                         {language === 'en' ? 'Submit Blog' : '提交博客'}
                       </motion.button>
                     )}
-                    {isHovered && isConnected && hasSubmittedCurrentCycle && (
+                    {(isHovered || isPinned) && isConnected && hasSubmittedCurrentCycle && (
                       <div className="absolute bottom-4 right-4 text-center text-sm text-gray-500 py-2">
                         {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
                       </div>
@@ -358,7 +392,7 @@ export default function Challenge(props: ChallengeProps) {
 
         {/* Participants List - Only visible when expanded */}
         <AnimatePresence>
-          {isHovered && (
+          {(isHovered || isPinned) && (
             <motion.div
               initial={{ opacity: 0, width: 0 }}
               animate={{ opacity: 1, width: '288px' }}
@@ -397,7 +431,7 @@ export default function Challenge(props: ChallengeProps) {
                   </div>
                 ))}
                 <AnimatePresence>
-                  {isHovered && isConnected && participatable && !isParticipant && !isChallenger && (
+                  {(isHovered || isPinned) && isConnected && participatable && !isParticipant && !isChallenger && (
                     <motion.button
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}

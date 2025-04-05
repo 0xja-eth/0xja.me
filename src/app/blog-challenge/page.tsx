@@ -38,6 +38,8 @@ export default function BlogChallenge() {
 
   const [filter, setFilter] = useState('all'); // 'all' | 'participating' | 'created'
   const [filterText, setFilterText] = useState('');
+  const [displayCount, setDisplayCount] = useState(5);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createForm, setCreateForm] = useState<ChallengeForm>({
@@ -99,26 +101,50 @@ export default function BlogChallenge() {
     setChallengeBalances(challengeBalancesData.map(d => Number(d.result || 0)));
   }, [challengeBalancesData]);
 
-  console.log({challenges, challengeInfos, challengeStates, challengeBalances});
+  console.log({challengeCount, challenges, challengeInfos, challengeStates, challengeBalances});
+
+  // 处理滚动加载
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isLoading) return;
+      
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+      
+      if (scrollHeight - scrollTop - clientHeight < 100) {
+        setIsLoading(true);
+        setDisplayCount(prev => prev + 5);
+        setTimeout(() => setIsLoading(false), 500);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLoading]);
 
   // 过滤挑战
-  const filteredChallenges = challenges.filter((address, i) => {
-    if (!address) return false;
-    const [, challenger] = challengeInfos?.[i] ?? [];
-    const [, isStarted] = challengeStates?.[i] ?? [];
-    
-    let flag = true
-    switch (filter) {
-      case 'all': flag &&= isStarted; break;
-      case 'participating': flag &&= challengeBalances[i] > 0; break;
-      case 'created': flag &&= addrEq(challenger, userAddress!); break;
-    }
+  const filteredChallenges = challenges
+    .filter((address, i) => {
+      if (!address) return false;
+      const [, challenger] = challengeInfos?.[i] ?? [];
+      const [, isStarted] = challengeStates?.[i] ?? [];
+      
+      let flag = true
+      switch (filter) {
+        case 'all': flag &&= isStarted; break;
+        case 'participating': flag &&= challengeBalances[i] > 0; break;
+        case 'created': flag &&= addrEq(challenger, userAddress!); break;
+      }
 
-    if (filterText) flag &&= (addrEq(address, filterText) || addrEq(challenger, filterText))
+      if (filterText) flag &&= (addrEq(address, filterText) || addrEq(challenger, filterText))
 
-    return flag;
-  });
- 
+      return flag;
+    })
+    .slice()
+    .reverse()
+    .slice(0, displayCount);
+
   // 创建新挑战
   const handleCreateChallenge = async () => {
     if (!isConnected) return;
@@ -149,44 +175,54 @@ export default function BlogChallenge() {
   return (
     <main className="min-h-screen p-8 pt-20">
       {/* <DynamicBackground /> */}
-      {/* 筛选器 */}
-      <div className="flex gap-4 mb-6">
-        <input
-          type="text"
-          value={filterText}
-          onChange={e => setFilterText(e.target.value)}
-          placeholder={language === 'en' ? 'Search by address...' : '输入地址搜索...'}
-          className="bg-black/30 px-4 py-2 rounded-lg text-gray-300 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 w-96"
-        />
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex gap-4 items-center">
+          <input
+            type="text"
+            value={filterText}
+            onChange={e => setFilterText(e.target.value)}
+            placeholder={language === 'en' ? 'Search by address...' : '输入地址搜索...'}
+            className="bg-black/30 px-4 py-2 rounded-lg text-gray-300 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 w-96"
+          />
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              filter === 'all' 
+                ? 'bg-purple-500/30 text-purple-300' 
+                : 'bg-black/30 hover:bg-black/50 text-gray-400'
+            }`}
+          >
+            {language === 'en' ? 'All' : '全部'}
+          </button>
+          <button
+            onClick={() => setFilter('participating')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              filter === 'participating'
+                ? 'bg-purple-500/30 text-purple-300'
+                : 'bg-black/30 hover:bg-black/50 text-gray-400'
+            }`}
+          >
+            {language === 'en' ? 'Participating' : '我参加的'}
+          </button>
+          <button
+            onClick={() => setFilter('created')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              filter === 'created'
+                ? 'bg-purple-500/30 text-purple-300'
+                : 'bg-black/30 hover:bg-black/50 text-gray-400'
+            }`}
+          >
+            {language === 'en' ? 'Created' : '我发起的'}
+          </button>
+        </div>
+
+        {/* New Challenge Button */}
         <button
-          onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-lg transition-colors ${
-            filter === 'all' 
-              ? 'bg-purple-500/30 text-purple-300' 
-              : 'bg-black/30 hover:bg-black/50 text-gray-400'
-          }`}
+          onClick={() => setIsCreateModalOpen(true)}
+          className="pixel-button flex items-center justify-center gap-2"
         >
-          {language === 'en' ? 'All' : '全部'}
-        </button>
-        <button
-          onClick={() => setFilter('participating')}
-          className={`px-4 py-2 rounded-lg transition-colors ${
-            filter === 'participating'
-              ? 'bg-purple-500/30 text-purple-300'
-              : 'bg-black/30 hover:bg-black/50 text-gray-400'
-          }`}
-        >
-          {language === 'en' ? 'Participating' : '我参加的'}
-        </button>
-        <button
-          onClick={() => setFilter('created')}
-          className={`px-4 py-2 rounded-lg transition-colors ${
-            filter === 'created'
-              ? 'bg-purple-500/30 text-purple-300'
-              : 'bg-black/30 hover:bg-black/50 text-gray-400'
-          }`}
-        >
-          {language === 'en' ? 'Created' : '我发起的'}
+          <span>+ New Challenge</span>
         </button>
       </div>
 
@@ -194,7 +230,6 @@ export default function BlogChallenge() {
       <div className="space-y-4 mb-8">
         {filteredChallenges.map((address) => {
           if (!address) return null;
-
           const index = challenges.indexOf(address);
           return (
             <Challenge
@@ -205,15 +240,12 @@ export default function BlogChallenge() {
             />
           );
         })}
+        {isLoading && (
+          <div className="text-center py-4 text-gray-400">
+            Loading...
+          </div>
+        )}
       </div>
-
-      {/* Create Challenge Button */}
-      <button
-        onClick={() => setIsCreateModalOpen(true)}
-        className="bg-black/50 p-6 rounded-lg hover:bg-black/60 transition flex items-center justify-center w-full"
-      >
-        <span className="text-xl font-bold crystal-text">+ New Challenge</span>
-      </button>
 
       {/* Create Challenge Modal */}
       {isCreateModalOpen && (
