@@ -244,7 +244,7 @@ export default function BlogChallenge() {
         <CreateChallengeModal
           isOpen={isCreateModalOpen}
           onClose={() => {
-            fetchChallenges();
+            setTimeout(fetchChallenges, 3000);
             setIsCreateModalOpen(false)
           }}
           // onSubmit={async (data) => {
@@ -289,10 +289,10 @@ export default function BlogChallenge() {
                       key={chain.id}
                       className="px-4 py-2 bg-black/50 backdrop-blur-sm rounded-lg border border-white/10 text-gray-300 flex items-center gap-2 hover:border-purple-500/20 transition-colors"
                     >
-                      {chain.icon && (
+                      {/* {chain.icon && (
                         // @ts-ignore
                         <img src={chain.icon.url} alt={chain.name} className="w-5 h-5" />
-                      )}
+                      )} */}
                       <span className="font-sans">{chain.name}</span>
                     </div>
                   ) : null;

@@ -180,7 +180,7 @@ export default function Challenge(props: ChallengeProps) {
         address, abi, functionName: 'participate',
         args: [BigInt(shareRatio * 100)] // 转换为基点 (1% = 100)
       });
-      await refetchState();
+      setTimeout(refetchState, 3000);
     } catch (error) {
       console.error('Error participating in challenge:', error);
     }
@@ -604,8 +604,8 @@ export default function Challenge(props: ChallengeProps) {
       <SubmitBlogModal
         isOpen={isSubmitModalOpen}
         onClose={() => {
-          refetchState()
-          setIsSubmitModalOpen(false)
+          setIsSubmitModalOpen(false);
+          setTimeout(refetchState, 3000);
         }}
         challengeAddress={address as `0x${string}`}
       />
