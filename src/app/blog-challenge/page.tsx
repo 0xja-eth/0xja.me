@@ -169,7 +169,7 @@ export default function BlogChallenge() {
       {/* <DynamicBackground /> */}
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center font-sans text-xl font-bold">
           <input
             type="text"
             value={filterText}
@@ -195,7 +195,7 @@ export default function BlogChallenge() {
                 : 'bg-black/30 hover:bg-black/50 text-gray-400'
             }`}
           >
-            {language === 'en' ? 'Participating' : '我参加的'}
+            {language === 'en' ? 'Participated' : '我参加的'}
           </button>
           <button
             onClick={() => setFilter('created')}

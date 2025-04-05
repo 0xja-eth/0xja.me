@@ -543,7 +543,7 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 py-1 px-2.5 rounded-lg bg-[#28C840] hover:brightness-110 text-black font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 py-1 px-2.5 rounded-lg bg-purple-500 hover:brightness-110 text-black font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={isCreating}
                     >
                       {isCreating ? (

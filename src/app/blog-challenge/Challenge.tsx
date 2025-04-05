@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon';
 import { ContractABIs, useContract, useExplorer } from '@/contracts';
 import { ChallengeInfo, ChallengeState } from './page';
+import SubmitBlogModal from './SubmitBlogModal';
 
 export interface BlogSubmission {
   cycle: number;
@@ -37,11 +38,6 @@ export default function Challenge(props: ChallengeProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
-  const [submitForm, setSubmitForm] = useState({
-    title: '',
-    description: '',
-    url: ''
-  });
 
   const { language } = useLanguage();
   const { isConnected, chainId, address: userAddress } = useAccount();
@@ -190,22 +186,6 @@ export default function Challenge(props: ChallengeProps) {
     }
   };
 
-  // 处理博客提交
-  const handleSubmit = async () => {
-    if (!isConnected) return;
-    try {
-      await writeContractAsync({
-        address, abi, functionName: 'submitBlog',
-        args: [submitForm.title, submitForm.description, submitForm.url]
-      });
-      setIsSubmitModalOpen(false);
-      setSubmitForm({ title: '', description: '', url: '' });
-      await refetchState();
-    } catch (error) {
-      console.error('Error submitting blog:', error);
-    }
-  };
-
   const getStatus = () => {
     const [, isStarted, , , , deposit, isChallengerApproved] = state ?? [];
     const [, , , , , , penaltyAmount] = props.info ?? [];
@@ -283,7 +263,7 @@ export default function Challenge(props: ChallengeProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    <h3 className="text-lg font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                       Challenge #{id?.toString()}
                     </h3>
                     {/* Contract Explorer Link */}
@@ -493,7 +473,7 @@ export default function Challenge(props: ChallengeProps) {
                     avatarUrl="/images/player-avatar.svg"
                   />
                   <AnimatePresence>
-                    {(isHovered || isExpanded) && isConnected && isChallenger && !hasSubmittedCurrentCycle && (
+                    {(isHovered || isExpanded) && isConnected && isChallenger && (
                       <motion.button
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -504,11 +484,13 @@ export default function Challenge(props: ChallengeProps) {
                         }}
                         className="absolute bottom-4 right-4 pixel-button flex items-center justify-center gap-2"
                       >
-                        {language === 'en' ? 'Submit Blog' : '提交博客'}
+                        {hasSubmittedCurrentCycle ? 
+                          language === 'en' ? 'Submit Again' : '继续提交' : 
+                          language === 'en' ? 'Submit Blog' : '提交博客'}
                       </motion.button>
                     )}
                     {(isHovered || isExpanded) && isConnected && hasSubmittedCurrentCycle && (
-                      <div className="absolute bottom-4 right-4 text-center text-xl font-sans text-gray-500 py-2">
+                      <div className="absolute bottom-4 left-4 text-center text-xl font-sans text-gray-500 py-2 text-green-500">
                         {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
                       </div>
                     )}
@@ -582,77 +564,14 @@ export default function Challenge(props: ChallengeProps) {
       </motion.div>
 
       {/* Submit Modal */}
-      {isSubmitModalOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-          onClick={() => setIsSubmitModalOpen(false)}
-        >
-          <motion.div
-            initial={{ scale: 0.9, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.9, y: 20 }}
-            className="bg-black/80 p-6 rounded-lg border border-gray-800 w-full max-w-md"
-            onClick={e => e.stopPropagation()}
-          >
-            <h3 className="text-xl font-bold mb-4 neon-text">
-              {language === 'en' ? 'Submit Blog' : '提交博客'}
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xl text-gray-400 mb-1">
-                  {language === 'en' ? 'Title' : '标题'}
-                </label>
-                <input
-                  type="text"
-                  value={submitForm.title}
-                  onChange={(e) => setSubmitForm({ ...submitForm, title: e.target.value })}
-                  className="w-full bg-black/30 text-xl text-gray-300 rounded-lg px-4 py-2 border border-gray-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none"
-                  placeholder={language === 'en' ? 'Enter blog title' : '输入博客标题'}
-                />
-              </div>
-              <div>
-                <label className="block text-xl text-gray-400 mb-1">
-                  {language === 'en' ? 'Description' : '描述'}
-                </label>
-                <textarea
-                  value={submitForm.description}
-                  onChange={(e) => setSubmitForm({ ...submitForm, description: e.target.value })}
-                  className="w-full bg-black/30 text-xl text-gray-300 rounded-lg px-4 py-2 border border-gray-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none resize-none h-24"
-                  placeholder={language === 'en' ? 'Enter blog description' : '输入博客描述'}
-                />
-              </div>
-              <div>
-                <label className="block text-xl text-gray-400 mb-1">URL</label>
-                <input
-                  type="url"
-                  value={submitForm.url}
-                  onChange={(e) => setSubmitForm({ ...submitForm, url: e.target.value })}
-                  className="w-full bg-black/30 text-xl text-gray-300 rounded-lg px-4 py-2 border border-gray-800 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none"
-                  placeholder={language === 'en' ? 'Enter blog URL' : '输入博客链接'}
-                />
-              </div>
-              <div className="flex gap-3 justify-end mt-6">
-                <button
-                  onClick={() => setIsSubmitModalOpen(false)}
-                  className="px-4 py-2 rounded hover:bg-gray-800 transition-colors text-lg"
-                >
-                  {language === 'en' ? 'Cancel' : '取消'}
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  className="pixel-button text-lg"
-                  disabled={!submitForm.title || !submitForm.description || !submitForm.url}
-                >
-                  {language === 'en' ? 'Submit' : '提交'}
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
+      <SubmitBlogModal
+        isOpen={isSubmitModalOpen}
+        onClose={() => {
+          refetchState()
+          setIsSubmitModalOpen(false)
+        }}
+        challengeAddress={address as `0x${string}`}
+      />
     </div>
   );
 }
