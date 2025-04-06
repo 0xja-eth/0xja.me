@@ -13,6 +13,7 @@ import CreateChallengeModal from './CreateChallengeModal';
 import './crystal-overlay.css';
 import { ContractAddresses, useContract, SupportedChains } from '@/contracts';
 import { addrEq } from '@/utils/address';
+import { useChains } from 'wagmi';
 
 // 类型定义
 interface ChallengeForm {
@@ -30,6 +31,9 @@ export default function BlogChallenge() {
   const { language } = useLanguage();
   const { isConnected, chainId, address: userAddress } = useAccount();
   const { writeContractAsync } = useWriteContract();
+
+  const chains = useChains()
+  const isTestnet = chains.find(chain => chain.id === chainId)?.testnet
 
   // 状态
   const [challenges, setChallenges] = useState<`0x${string}`[]>([]);
@@ -169,6 +173,21 @@ export default function BlogChallenge() {
       {/* <DynamicBackground /> */}
       {/* Header */}
       {isValidChain ? <>
+        {isTestnet && (
+          <div className="mb-6 px-4 py-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span className="text-yellow-400 font-sans text-xl">
+                {language === 'en' 
+                  ? 'You are currently on testnet. Test tokens can be minted when creating a challenge.'
+                  : '当前为测试网络。创建挑战时可以mint测试代币。'
+                }
+              </span>
+            </div>
+          </div>
+        )}
         <div className="flex justify-between items-center mb-6">
           <div className="flex gap-4 items-center font-sans text-xl font-bold">
             <input

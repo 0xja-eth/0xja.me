@@ -11,7 +11,7 @@ interface Position {
 interface Monster {
   id: number;
   position: Position;
-  state: 'standby' | 'active' | 'damaged';
+  state: 'standby' | 'active' | 'damaged' | 'failed';
   blogs: BlogSubmission[];
 }
 
@@ -155,8 +155,8 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
         x: Math.max(margin, Math.min(width - margin, pos.x)),
         y: Math.max(margin, Math.min(height - margin, pos.y))
       },
-      state: i < currentCycleIdx || submissions.find(blog => blog.cycle === i + 1) ? 'damaged' : 
-             i === currentCycleIdx ? 'active' : 'standby',
+      state: i < currentCycleIdx ? submissions.find(blog => blog.cycle === i + 1) ? 'damaged' : 'failed' : 
+             i === currentCycleIdx ? submissions.find(blog => blog.cycle === i + 1) ? 'damaged' : 'active' : 'standby',
       blogs: submissions.filter((blog) => blog.cycle === i + 1),
     } as Monster));
     
@@ -225,6 +225,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
             <div 
               className={`w-10 h-10 rounded-lg relative ${
                 monster.state === 'damaged' ? 'bg-green-500/30' :
+                monster.state === 'failed' ? 'bg-red-500/30' :
                 monster.state === 'active' ? 'bg-yellow-500/30' :
                 'bg-gray-500/30'
               }`}
@@ -232,6 +233,11 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
               {monster.state === 'damaged' && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-3 h-3 bg-green-400 rounded-full" />
+                </div>
+              )}
+              {monster.state === 'failed' && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-3 h-3 bg-red-400 rounded-full" />
                 </div>
               )}
             </div>

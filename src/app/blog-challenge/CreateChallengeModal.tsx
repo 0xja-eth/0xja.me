@@ -2,8 +2,8 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useLanguage } from '@/i18n/context';
 import { AnimatePresence, motion } from 'framer-motion'
 import { ContractAddresses, useContract } from '@/contracts';
-import { useAccount, useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { parseEther } from 'ethers/utils';
+import { useAccount, useBalance, useChains, useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { formatUnits, parseEther } from 'ethers/utils';
 import { ERC20_ABI } from '@/contracts/ERC20';
 import { BLOG_CHALLENGE_ABI } from '@/contracts/BlogChallenge';
 
@@ -58,10 +58,15 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
 
   const [form, setForm] = useState(DefaultForm)
 
-  const { isConnected, chainId } = useAccount();
+  const { isConnected, chainId, address: userAddress } = useAccount();
   const { writeContractAsync } = useWriteContract();
 
-  const { address, abi, isValidChain } = useContract(chainId as number, 'ChallengeFactory');
+  // const chains = useChains()
+  // const chainData = chains.find(chain => chain.id === chainId)
+  // const isTestnet = chainData?.testnet
+
+  const { address, abi } = useContract(chainId as number, 'ChallengeFactory');
+  const { address: testTokenAddress, abi: testTokenAbi } = useContract(chainId as number, 'TestToken');
 
   const [createTxHash, setCreateTxHash] = useState<`0x${string}`>()
   const [approveTxHash, setApproveTxHash] = useState<`0x${string}`>()
@@ -89,6 +94,11 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
   const endDate = useMemo(() => {
     return new Date(startDate.getTime() + Number(form.cycle) * Number(form.numberOfCycles) * 1000)
   }, [startDate, form.cycle, form.numberOfCycles])
+
+  const { data: balance, refetch: refetchBalance } = useBalance({
+    address: userAddress,
+    token: ContractAddresses[chainId as number].USDT
+  })
 
   const { data: approveAmount } = useReadContract({
     address: challengeAddress,
@@ -165,6 +175,27 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
       throw error
     }
   }, [chainId, isConnected, writeContractAsync, challengeAddress]);
+
+  const mintTestToken = useCallback(async () => {
+    if (!isConnected || !testTokenAddress) return;
+    
+    try {
+      const txHash = await writeContractAsync({
+        address: testTokenAddress,
+        abi: testTokenAbi,
+        functionName: 'mint',
+        args: [
+          parseEther('100000')
+        ]
+      } as const);
+      console.log('Test token minted:', txHash)
+
+      setTimeout(refetchBalance, 3000);
+    } catch (error) {
+      console.error('Error minting test token:', error);
+      throw error
+    }
+  }, [chainId, isConnected, writeContractAsync, testTokenAddress, testTokenAbi, userAddress]);
 
   const close = useCallback(() => {
     setIsCreating(false)
@@ -480,6 +511,25 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
                         <span>{language === 'en' ? 'Total Approve' : '总授权'}:</span>
                         <span>{approveAmountInt} USDT</span>
                       </div>
+                      <div className="flex justify-between text-gray-300">
+                        <span className="text-gray-400">{language === 'en' ? 'Your Balance' : '余额'}:</span>
+                        <span>{balance?.value ? formatUnits(balance.value, balance.decimals) : '0'} USDT</span>
+                      </div>
+                      {/* 如果 testTokenAddress 存在，给一个Mint按钮并给出相应提示：没有测试代币？点击此处进行Mint */}
+                      {testTokenAddress && (
+                        <div className="mt-2">
+                          <button
+                            type="button"
+                            onClick={mintTestToken}
+                            className="text-purple-400 hover:text-purple-300 transition-colors"
+                          >
+                            {language === 'en' 
+                              ? 'No test tokens? Click here to mint'
+                              : '没有测试代币？点击此处进行Mint'
+                            }
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
