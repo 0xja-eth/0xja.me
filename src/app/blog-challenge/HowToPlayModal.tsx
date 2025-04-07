@@ -2,6 +2,9 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/context';
+import { useAccount } from 'wagmi';
+import { ContractAddresses, SupportedChains, useContract, useExplorer } from '@/contracts';
+import { FiExternalLink } from 'react-icons/fi';
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -10,6 +13,11 @@ interface HowToPlayModalProps {
 
 export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
   const { language } = useLanguage();
+  const { chainId } = useAccount();
+
+  // 获取当前链的区块浏览器URL和合约地址
+  const { address } = useContract(chainId as number, "ChallengeFactory");
+  const { addressUrl } = useExplorer(chainId as number);
 
   const introduction = language === 'en' ?
     'Blog Challenge is a decentralized platform that helps you build a consistent writing habit through smart contract-powered accountability. Create or join challenges, set your goals, and stay motivated with our unique penalty system.' :
@@ -151,6 +159,34 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
                 ))}
               </div>
 
+              {/* Contract Info */}
+              <div className="rounded-lg bg-black/20 p-4">
+                <div className="text-lg text-purple-300 mb-3">
+                  {language === 'en' ? 'Smart Contract' : '智能合约'}
+                </div>
+                {address ? (
+                  <a
+                    href={addressUrl(address)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-400 hover:text-purple-300 transition-colors group"
+                  >
+                    ChallengeFactory
+                    <span className="font-mono text-sm break-all">
+                      {address}
+                    </span>
+                    <FiExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                ) : (
+                  <div className="text-gray-500 italic text-sm">
+                    {language === 'en'
+                      ? 'Please connect wallet and switch to a supported network'
+                      : '请连接钱包并切换到支持的网络'
+                    }
+                  </div>
+                )}
+              </div>
+
               {/* Additional Info */}
               <div className="mt-6 rounded-lg bg-purple-500/10 border border-purple-500/20 p-4">
                 <div className="text-lg text-purple-300 mb-2">
@@ -208,7 +244,7 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
                     <div className="w-5 h-5 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <svg className="w-3 h-3 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                    </svg>
                     </div>
                     <p className="text-gray-400 leading-relaxed">
                       {language === 'en'
