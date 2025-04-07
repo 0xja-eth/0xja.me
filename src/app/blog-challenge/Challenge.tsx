@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAccount, useReadContract, useReadContracts, useWriteContract } from 'wagmi';
+import { useAccount, useBalance, useReadContract, useReadContracts, useWriteContract } from 'wagmi';
 import { BLOG_CHALLENGE_ABI } from '@/contracts/BlogChallenge';
 import { DungeonMap } from './DungeonMap';
-import { formatEther, parseEther } from 'ethers';
+import { formatEther, formatUnits, parseEther } from 'ethers';
 import { useLanguage } from '@/i18n/context';
 import './crystal-slider.css';
 import { addrEq, addrInclude } from '@/utils/address';
@@ -12,7 +12,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon';
 import { ContractABIs, useContract, useExplorer } from '@/contracts';
 import { ChallengeInfo, ChallengeState } from './page';
-import SubmitBlogModal from './SubmitBlogModal';
 
 export interface BlogSubmission {
   cycle: number;
@@ -37,7 +36,6 @@ export default function Challenge(props: ChallengeProps) {
   const [shareRatio, setShareRatio] = useState(50); // 默认50%
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
 
   const { language } = useLanguage();
   const { isConnected, chainId, address: userAddress } = useAccount();
@@ -72,6 +70,12 @@ export default function Challenge(props: ChallengeProps) {
     participantsCount, blogSubmissionsCount,
     deposit, isChallengerApproved
   ] = state ?? props.state ?? [];
+
+  const { data } = useBalance({
+    address: userAddress,
+    token: penaltyToken
+  })
+  const decimals = data?.decimals
 
   // const { data: currentCycle } = useReadContract({
   //   address, abi, functionName: 'currentCycle',
@@ -505,33 +509,14 @@ export default function Challenge(props: ChallengeProps) {
                 <div className="h-[500px] relative bg-black/30 border-t border-gray-800">
                   <div className="absolute inset-0 bg-[url('/images/grid.svg')] opacity-10" />
                   <DungeonMap
+                    penaltyAmount={formatUnits(penaltyAmount, decimals)}
+                    challengeAddress={props.address}
+                    challenger={challenger}
+                    refetchState={refetchState}
                     submissions={blogSubmissions}
                     currentCycle={Number(currentCycle)}
                     avatarUrl="/images/player-avatar.svg"
                   />
-                  <AnimatePresence>
-                    {(isHovered || isExpanded) && isConnected && isChallenger && (
-                      <motion.button
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsSubmitModalOpen(true);
-                        }}
-                        className="absolute bottom-4 right-4 pixel-button flex items-center justify-center gap-2"
-                      >
-                        {hasSubmittedCurrentCycle ? 
-                          language === 'en' ? 'Submit Again' : '继续提交' : 
-                          language === 'en' ? 'Submit Blog' : '提交博客'}
-                      </motion.button>
-                    )}
-                    {(isHovered || isExpanded) && isConnected && hasSubmittedCurrentCycle && (
-                      <div className="absolute bottom-4 left-4 text-center text-xl font-sans text-gray-500 py-2 text-green-500">
-                        {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
-                      </div>
-                    )}
-                  </AnimatePresence>
                 </div>
               </motion.div>
             )}
@@ -600,15 +585,6 @@ export default function Challenge(props: ChallengeProps) {
         </AnimatePresence>
       </motion.div>
 
-      {/* Submit Modal */}
-      <SubmitBlogModal
-        isOpen={isSubmitModalOpen}
-        onClose={() => {
-          setIsSubmitModalOpen(false);
-          setTimeout(refetchState, 3000);
-        }}
-        challengeAddress={address as `0x${string}`}
-      />
     </div>
   );
 }
