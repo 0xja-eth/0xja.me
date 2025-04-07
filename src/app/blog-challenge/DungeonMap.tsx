@@ -195,51 +195,60 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
                 ))}
 
                 {/* 空周期提示 */}
-                {isEmpty && (
+                {isEmpty ? (
                   <div className="relative flex items-center justify-center p-4">
-                    <div>
-                      {isCurrentCycle ? 
-                        <AnimatePresence>
-                          {isConnected && isChallenger && (
-                            <motion.button
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setIsSubmitModalOpen(true);
-                              }}
-                              className="pixel-button flex items-center justify-center gap-2"
-                            >
-                              {hasSubmittedCurrentCycle ? 
-                                language === 'en' ? 'Submit Again' : '继续提交' : 
-                                language === 'en' ? 'Submit Blog' : '提交博客'}
-                            </motion.button>
-                          )}
-                          {isConnected && hasSubmittedCurrentCycle && (
-                            <div className="text-center text-xl font-sans text-gray-500 py-2 text-green-500">
-                              {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
-                            </div>
-                          )}
-                        </AnimatePresence> :
+                    {isCurrentCycle ? 
+                      <AnimatePresence>
+                        {isChallenger ? (
+                          <motion.button
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsSubmitModalOpen(true);
+                            }}
+                            className="pixel-button flex items-center justify-center gap-2"
+                          >
+                            {language === 'en' ? 'Submit Blog' : '提交博客'}
+                          </motion.button>
+                        ) : 
                         <span className="text-gray-500 text-lg italic">
-                          language === 'en' ? 
-                            `No submission in this cycle, deduct ${penaltyAmount} USDT` : 
-                            `本周期无提交，扣除 ${penaltyAmount} USDT`
+                          {language === 'en' ? 
+                            `Waiting for challenger to submit` : 
+                            `等待挑战者提交`}
                         </span>
-                      }
-{/*                     
-                      language === 'en' 
-                        ? isCurrentCycle 
-                          ? 'Waiting for submission...' 
-                          : 'No submission in this cycle'
-                        : isCurrentCycle
-                          ? 
-                          : '本周期无提交'
-                      } */}
-                    </div>
+                        }
+                      </AnimatePresence> :
+                      <span className="text-gray-500 text-lg italic">
+                        {language === 'en' ? 
+                          `No submission in this cycle, deduct ${penaltyAmount} USDT` : 
+                          `本周期无提交，扣除 ${penaltyAmount} USDT`}
+                      </span>
+                    }
                   </div>
-                )}
+                ) : isCurrentCycle && 
+                  <div className="relative flex flex-col items-center justify-center p-4">
+                    <div className="text-center text-gray-500 text-lg italic">
+                      {language === 'en' ? 'Already submitted for this cycle' : '本周期已提交'}
+                    </div>
+                    <AnimatePresence>
+                      {isConnected && isChallenger && (
+                        <motion.button
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsSubmitModalOpen(true);
+                          }}
+                          className="pixel-button flex items-center justify-center mt-4 gap-2"
+                        >
+                          {language === 'en' ? 'Submit Again' : '继续提交'}
+                        </motion.button>
+                      )}
+                    </AnimatePresence>
+                  </div>}
               </div>
             </div>
           );
