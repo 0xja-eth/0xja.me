@@ -164,7 +164,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
                       }
                       transition-all cursor-pointer group
                     `}
-                    onClick={() => setSelectedSubmission(submission)}
+                    // onClick={() => setSelectedSubmission(submission)}
                   >
                     {/* 日期 */}
                     <div className="flex-shrink-0 w-24 text-xl text-gray-400">
