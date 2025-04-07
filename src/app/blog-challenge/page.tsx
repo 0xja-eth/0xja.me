@@ -9,6 +9,7 @@ import { parseEther } from 'ethers';
 import DynamicBackground from '@/components/DynamicBackground';
 import Challenge from './Challenge';
 import CreateChallengeModal from './CreateChallengeModal';
+import HowToPlayModal from './HowToPlayModal';
 
 import './crystal-overlay.css';
 import { ContractAddresses, useContract, SupportedChains } from '@/contracts';
@@ -47,6 +48,7 @@ export default function BlogChallenge() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isHowToPlayOpen, setIsHowToPlayOpen] = useState(false);
 
   const { address, abi, isValidChain } = useContract(chainId as number, 'ChallengeFactory');
 
@@ -143,31 +145,6 @@ export default function BlogChallenge() {
     .reverse()
     .slice(0, displayCount);
 
-  // // 创建新挑战
-  // const createChallenge = async (data: any) => {
-  //   if (!isConnected) return;
-    
-  //   try {
-  //     await writeContractAsync({
-  //       address, abi, functionName: 'createChallenge',
-  //       args: [
-  //         BigInt(data.startTime),
-  //         BigInt(data.cycle),
-  //         BigInt(data.numberOfCycles),
-  //         ContractAddresses[chainId as number].USDT,
-  //         data.penaltyAmount,
-  //         BigInt(data.maxParticipants),
-  //         true, true
-  //       ]
-  //     });
-      
-  //     setIsCreateModalOpen(false);
-  //     fetchChallenges();
-  //   } catch (error) {
-  //     console.error('Error creating challenge:', error);
-  //   }
-  // };
-
   return (
     <main className="min-h-screen p-8 pt-20">
       {/* <DynamicBackground /> */}
@@ -189,53 +166,66 @@ export default function BlogChallenge() {
           </div>
         )}
         <div className="flex justify-between items-center mb-6">
-          <div className="flex gap-4 items-center font-sans text-xl font-bold">
-            <input
-              type="text"
-              value={filterText}
-              onChange={e => setFilterText(e.target.value)}
-              placeholder={language === 'en' ? 'Search by address...' : '输入地址搜索...'}
-              className="bg-black/30 px-4 py-2 rounded-lg text-gray-300 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 w-96"
-            />
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filter === 'all' 
-                  ? 'bg-purple-500/30 text-purple-300' 
-                  : 'bg-black/30 hover:bg-black/50 text-gray-400'
-              }`}
-            >
-              {language === 'en' ? 'All' : '全部'}
-            </button>
-            <button
-              onClick={() => setFilter('participating')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filter === 'participating'
-                  ? 'bg-purple-500/30 text-purple-300'
-                  : 'bg-black/30 hover:bg-black/50 text-gray-400'
-              }`}
-            >
-              {language === 'en' ? 'Participated' : '我参加的'}
-            </button>
-            <button
-              onClick={() => setFilter('created')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filter === 'created'
-                  ? 'bg-purple-500/30 text-purple-300'
-                  : 'bg-black/30 hover:bg-black/50 text-gray-400'
-              }`}
-            >
-              {language === 'en' ? 'Created' : '我发起的'}
-            </button>
-          </div>
+          <div className="flex gap-4 items-center w-full justify-between font-sans text-xl font-bold">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={filterText}
+                onChange={e => setFilterText(e.target.value)}
+                placeholder={language === 'en' ? 'Search by address...' : '输入地址搜索...'}
+                className="bg-black/30 px-4 py-2 rounded-lg text-gray-300 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 w-96 mr-4"
+              />
+              <button
+                onClick={() => setFilter('all')}
+                className={`px-4 py-1.5 rounded-lg transition-colors ${
+                  filter === 'all'
+                    ? 'bg-purple-500/30 text-purple-300'
+                    : 'bg-black/30 hover:bg-black/50 text-gray-400'
+                }`}
+              >
+                {language === 'en' ? 'All' : '全部'}
+              </button>
+              <button
+                onClick={() => setFilter('participating')}
+                className={`px-4 py-1.5 rounded-lg transition-colors ${
+                  filter === 'participating'
+                    ? 'bg-purple-500/30 text-purple-300'
+                    : 'bg-black/30 hover:bg-black/50 text-gray-400'
+                }`}
+              >
+                {language === 'en' ? 'Participating' : '参与中'}
+              </button>
+              <button
+                onClick={() => setFilter('created')}
+                className={`px-4 py-1.5 rounded-lg transition-colors ${
+                  filter === 'created'
+                    ? 'bg-purple-500/30 text-purple-300'
+                    : 'bg-black/30 hover:bg-black/50 text-gray-400'
+                }`}
+              >
+                {language === 'en' ? 'Created' : '我发起的'}
+              </button>
+            </div>
 
-          {/* New Challenge Button */}
-          <button
-            onClick={() => setIsCreateModalOpen(true)}
-            className="pixel-button flex items-center justify-center gap-2"
-          >
-            <span>{language === 'en' ? '+ New Challenge' : '创建博客挑战'}</span>
-          </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setIsHowToPlayOpen(true)}
+                className="px-4 py-1.5 rounded-lg bg-black/30 hover:bg-black/50 text-gray-400 transition-colors flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{language === 'en' ? 'How to Play' : '使用说明'}</span>
+              </button>
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="pixel-button flex items-center justify-center gap-2"
+              >
+                <span>{language === 'en' ? '+ New Challenge' : '创建博客挑战'}</span>
+              </button>
+            </div>
+
+          </div>
         </div>
 
         {/* 挑战列表 */}
@@ -266,20 +256,11 @@ export default function BlogChallenge() {
             setTimeout(fetchChallenges, 3000);
             setIsCreateModalOpen(false)
           }}
-          // onSubmit={async (data) => {
-          //   try {
-          //     await createChallenge({
-          //       startTime: new Date(data.startTime).getTime() / 1000,
-          //       cycle: Number(data.cycle),
-          //       numberOfCycles: Number(data.numberOfCycles),
-          //       maxParticipants: Number(data.maxParticipants),
-          //       penaltyAmount: parseEther(data.penaltyAmount)
-          //     })
-          //     setIsCreateModalOpen(false)
-          //   } catch (e) {
-          //     console.error(e)
-          //   }
-          // }}
+        />
+
+        <HowToPlayModal
+          isOpen={isHowToPlayOpen}
+          onClose={() => setIsHowToPlayOpen(false)}
         />
 
       </> : <>
