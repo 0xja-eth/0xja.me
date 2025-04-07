@@ -165,18 +165,20 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
                   {language === 'en' ? 'Smart Contract' : '智能合约'}
                 </div>
                 {address ? (
-                  <a
-                    href={addressUrl(address)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-400 hover:text-purple-300 transition-colors group"
-                  >
-                    ChallengeFactory
-                    <span className="font-mono text-sm break-all">
-                      {address}
-                    </span>
-                    <FiExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <span className="font-sans text-lg text-gray-400">ChallengeFactory</span>
+                    <a
+                      href={addressUrl(address)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-gray-400 hover:text-purple-300 transition-colors group"
+                    >
+                      <span className="font-sans text-lg break-all">
+                        {address}
+                      </span>
+                      <FiExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                  </div>
                 ) : (
                   <div className="text-gray-500 italic text-sm">
                     {language === 'en'
