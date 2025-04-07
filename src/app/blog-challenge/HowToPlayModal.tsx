@@ -25,7 +25,7 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
   const steps = language === 'en' ? [
     {
       title: 'Create or Join a Challenge',
-      description: 'Click "+ New Challenge" to create your own challenge, or join an existing one by clicking "Join" on any available challenge.'
+      description: 'Click "+ New Challenge" to create your own challenge, or join an existing one by clicking "Join" on any available challenge, and start earning rewards!'
     },
     {
       title: 'Set Your Goals',
@@ -35,10 +35,10 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
       title: 'Submit Blog Posts',
       description: 'During each cycle, write and submit your blog post. You must submit before the cycle ends to avoid penalties.'
     },
-    {
-      title: 'Review & Engage',
-      description: 'Read and engage with other participants\' blog posts. This creates a supportive community of writers.'
-    },
+    // {
+    //   title: 'Review & Engage',
+    //   description: 'Read and engage with other participants\' blog posts. This creates a supportive community of writers.'
+    // },
     {
       title: 'Complete Cycles',
       description: 'Continue submitting posts for each cycle. If you miss a cycle, the penalty amount will be distributed among active participants.'
@@ -46,7 +46,7 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
   ] : [
     {
       title: '创建或加入挑战',
-      description: '点击"创建博客挑战"来创建你自己的挑战，或者点击现有挑战中的"加入"按钮来参与。'
+      description: '点击"创建博客挑战"来创建你自己的挑战，或者点击现有挑战中的"加入"按钮来参与监督，获得瓜分惩罚金的机会。'
     },
     {
       title: '设置目标',
@@ -56,10 +56,10 @@ export default function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps)
       title: '提交博客',
       description: '在每个周期内，编写并提交你的博客文章。你必须在周期结束前提交以避免惩罚。'
     },
-    {
-      title: '阅读与互动',
-      description: '阅读并与其他参与者的博客文章互动。这将创建一个互助的写作社区。'
-    },
+    // {
+    //   title: '阅读与互动',
+    //   description: '阅读并与其他参与者的博客文章互动。这将创建一个互助的写作社区。'
+    // },
     {
       title: '完成周期',
       description: '继续为每个周期提交文章。如果错过某个周期，惩罚金额将分配给活跃的参与者。'
