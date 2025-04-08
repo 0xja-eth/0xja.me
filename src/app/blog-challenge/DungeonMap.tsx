@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { useLanguage } from '@/i18n/context';
 import { BlogSubmission } from './Challenge';
 import { useAccount, useWriteContract } from 'wagmi';
 import { useContract } from '@/contracts';
-import { addrEq } from '@/utils/address';
+import { addrEq, addrInclude } from '@/utils/address';
 import SubmitBlogModal from './SubmitBlogModal';
 
 interface DungeonMapProps {
   challengeAddress: `0x${string}`;
   challenger: `0x${string}`;
+  participants: `0x${string}`[];
   penaltyAmount: string;
   submissions: Array<{
     cycle: number;
@@ -20,8 +21,9 @@ interface DungeonMapProps {
     timestamp: number;
   }>;
   currentCycle: number;
-  avatarUrl?: string;
+  lastUpdatedCycle: number;
   refetchState: () => any;
+  refetchLastUpdatedCycle: () => any;
 }
 
 // 模拟数据
@@ -74,10 +76,12 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   challengeAddress,
   penaltyAmount,
   submissions,
+  participants,
   currentCycle,
-  avatarUrl,
+  lastUpdatedCycle,
   challenger,
-  refetchState
+  refetchState,
+  refetchLastUpdatedCycle
 }) => {
   const { language } = useLanguage();
   const [selectedSubmission, setSelectedSubmission] = useState<typeof submissions[0] | null>(null);
@@ -92,6 +96,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   const { address, abi } = useContract(chainId as number, 'BlogChallenge', challengeAddress);
 
   const isChallenger = addrEq(challenger, userAddress || '');
+  const isParticipant = addrInclude(participants, userAddress || '');
 
   // 检查当前周期是否已提交
   const hasSubmittedCurrentCycle = submissions.some(
@@ -120,6 +125,22 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
     })
   }
 
+  const handleUpdate = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!isConnected) return
+
+    try {
+      await writeContractAsync({
+        address, abi, functionName: 'updateCycle'
+      })
+      setTimeout(refetchLastUpdatedCycle, 3000)
+    } catch (error) {
+      console.error('Error submitting blog:', error)
+    } finally {
+    }
+  }, [isConnected, address, abi])
+
   return (
     <div className="relative h-full w-full overflow-y-scroll">
       {/* 时间轴主体 */}
@@ -130,6 +151,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
           const cycleSubmissions = submissionsByCycle[cycle] || [];
           const isCurrentCycle = cycle === currentCycle;
           const isEmpty = cycleSubmissions.length === 0;
+          const isNeedUpdate = cycle > lastUpdatedCycle && isEmpty;
           
           return (
             <div key={cycle} className="relative mb-8">
@@ -196,7 +218,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
 
                 {/* 空周期提示 */}
                 {isEmpty ? (
-                  <div className="relative flex items-center justify-center p-4">
+                  <div className="relative flex flex-col items-center justify-center p-4">
                     {isCurrentCycle ? 
                       <AnimatePresence>
                         {isChallenger ? (
@@ -226,7 +248,32 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
                           `本周期无提交，扣除 ${penaltyAmount} USDT`}
                       </span>
                     }
+                    {!isCurrentCycle && isParticipant && 
+                      <div className="relative flex flex-col items-center justify-center p-4">
+                        {isNeedUpdate ? 
+                          <AnimatePresence>
+                            {isConnected && (
+                              <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={handleUpdate}
+                                className="pixel-button flex items-center justify-center gap-2"
+                              >
+                                {language === 'en' ? 'Claim Rewards' : '领取奖励'}
+                              </motion.button>
+                            )}
+                          </AnimatePresence> : 
+                          <span className="text-gray-500 text-lg italic">
+                            {language === 'en' ? 
+                              `Reward has been distributed` : 
+                              `奖励已发放`}
+                          </span>
+                        }
+                      </div>
+                    }
                   </div>
+                  
                 ) : isCurrentCycle && 
                   <div className="relative flex flex-col items-center justify-center p-4">
                     <div className="text-center text-gray-500 text-lg italic">
@@ -249,6 +296,31 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
                       )}
                     </AnimatePresence>
                   </div>}
+
+                  {/* {isEmpty && !isCurrentCycle && isParticipant && 
+                    <div className="relative flex flex-col items-center justify-center p-4">
+                      {isNeedUpdate ? 
+                        <AnimatePresence>
+                          {isConnected && (
+                            <motion.button
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              onClick={handleUpdate}
+                              className="pixel-button flex items-center justify-center gap-2"
+                            >
+                              {language === 'en' ? 'Claim Rewards' : '领取奖励'}
+                            </motion.button>
+                          )}
+                        </AnimatePresence> : 
+                        <span className="text-gray-500 text-lg italic">
+                          {language === 'en' ? 
+                            `Reward has been distributed` : 
+                            `奖励已发放`}
+                        </span>
+                      }
+                    </div>
+                  } */}
               </div>
             </div>
           );

@@ -29,7 +29,7 @@ export interface ChallengeProps {
 
 export default function Challenge(props: ChallengeProps) {
 
-  const [participants, setParticipants] = useState<string[]>([]);
+  const [participants, setParticipants] = useState<`0x${string}`[]>([]);
   const [participantBalances, setParticipantBalances] = useState<bigint[]>([]);
   
   const [blogSubmissions, setBlogSubmissions] = useState<BlogSubmission[]>([]);
@@ -77,9 +77,9 @@ export default function Challenge(props: ChallengeProps) {
   })
   const decimals = data?.decimals
 
-  // const { data: currentCycle } = useReadContract({
-  //   address, abi, functionName: 'currentCycle',
-  // });
+  const { data: lastUpdatedCycle, refetch: refetchLastUpdatedCycle } = useReadContract({
+    address, abi, functionName: 'lastUpdatedCycle',
+  });
   
   // const { data: started } = useReadContract({
   //   address, abi, functionName: 'started',
@@ -99,7 +99,7 @@ export default function Challenge(props: ChallengeProps) {
   useEffect(() => {
     if (!participantsData) return;
 
-    setParticipants(participantsData.map(({result}) => result || ''));
+    setParticipants(participantsData.map(({result}) => result as `0x${string}`));
   }, [participantsData]);
 
   const isParticipant = addrInclude(participants, userAddress || '');
@@ -512,10 +512,12 @@ export default function Challenge(props: ChallengeProps) {
                     penaltyAmount={formatUnits(penaltyAmount, decimals)}
                     challengeAddress={props.address}
                     challenger={challenger}
-                    refetchState={refetchState}
+                    participants={participants}
                     submissions={blogSubmissions}
                     currentCycle={Number(currentCycle)}
-                    avatarUrl="/images/player-avatar.svg"
+                    lastUpdatedCycle={Number(lastUpdatedCycle)}
+                    refetchState={refetchState}
+                    refetchLastUpdatedCycle={refetchLastUpdatedCycle}
                   />
                 </div>
               </motion.div>
