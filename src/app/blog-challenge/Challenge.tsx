@@ -66,7 +66,7 @@ export default function Challenge(props: ChallengeProps) {
   ] = props.info ?? [];
 
   const [
-    currentCycle, lastUpdatedCycle, started, participatable, 
+    currentCycle, lastUpdatedCycle, isStarted, participatable, 
     participantsCount, blogSubmissionsCount,
     deposit, isChallengerApproved
   ] = state ?? props.state ?? [];
@@ -191,12 +191,17 @@ export default function Challenge(props: ChallengeProps) {
   };
 
   const getStatus = () => {
-    const [, isStarted, , , , deposit, isChallengerApproved] = state ?? [];
-    const [, , , , , , penaltyAmount] = props.info ?? [];
+    // const [, isStarted, , , , deposit, isChallengerApproved] = state ?? [];
+    // const [, , , , , , penaltyAmount] = props.info ?? [];
+
+    const now = Math.floor(Date.now() / 1000);
+    const startTimeNum = Number(startTime);
 
     if (!isStarted) return {
       type: 'ended',
-      label: language === 'en' ? 'Ended' : '已结束',
+      label: now < startTimeNum ? 
+        language === 'en' ? 'Not Started' : '未开始' : 
+        language === 'en' ? 'Ended' : '已结束',
       color: 'text-neutral-400',
       bgColor: 'bg-neutral-400/10',
       borderColor: 'border-neutral-400/20',
