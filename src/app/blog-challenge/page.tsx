@@ -26,7 +26,7 @@ interface ChallengeForm {
 }
 
 export type ChallengeInfo = [bigint, `0x${string}`, bigint, bigint, bigint, `0x${string}`, bigint, bigint, boolean];
-export type ChallengeState = [bigint, boolean, boolean, bigint, bigint, bigint, boolean];
+export type ChallengeState = [bigint, bigint, boolean, boolean, bigint, bigint, bigint, boolean];
 
 export default function BlogChallenge() {
   const { language } = useLanguage();
@@ -128,7 +128,7 @@ export default function BlogChallenge() {
     .filter((address, i) => {
       if (!address) return false;
       const [, challenger, , , , , penaltyAmount] = challengeInfos?.[i] ?? [];
-      const [, isStarted, , , , deposit, isChallengerApproved] = challengeStates?.[i] ?? [];
+      const [, , isStarted, , , , deposit, isChallengerApproved] = challengeStates?.[i] ?? [];
       
       let flag = true
       switch (filter) {

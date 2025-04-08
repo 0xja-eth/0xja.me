@@ -66,7 +66,7 @@ export default function Challenge(props: ChallengeProps) {
   ] = props.info ?? [];
 
   const [
-    currentCycle, started, participatable, 
+    currentCycle, lastUpdatedCycle, started, participatable, 
     participantsCount, blogSubmissionsCount,
     deposit, isChallengerApproved
   ] = state ?? props.state ?? [];
@@ -77,9 +77,9 @@ export default function Challenge(props: ChallengeProps) {
   })
   const decimals = data?.decimals
 
-  const { data: lastUpdatedCycle, refetch: refetchLastUpdatedCycle } = useReadContract({
-    address, abi, functionName: 'lastUpdatedCycle',
-  });
+  // const { data: lastUpdatedCycle, refetch: refetchLastUpdatedCycle } = useReadContract({
+  //   address, abi, functionName: 'lastUpdatedCycle',
+  // });
   
   // const { data: started } = useReadContract({
   //   address, abi, functionName: 'started',
@@ -517,7 +517,7 @@ export default function Challenge(props: ChallengeProps) {
                     currentCycle={Number(currentCycle)}
                     lastUpdatedCycle={Number(lastUpdatedCycle)}
                     refetchState={refetchState}
-                    refetchLastUpdatedCycle={refetchLastUpdatedCycle}
+                    // refetchLastUpdatedCycle={refetchLastUpdatedCycle}
                   />
                 </div>
               </motion.div>

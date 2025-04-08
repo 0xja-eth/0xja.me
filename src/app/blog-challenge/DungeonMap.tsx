@@ -23,7 +23,7 @@ interface DungeonMapProps {
   currentCycle: number;
   lastUpdatedCycle: number;
   refetchState: () => any;
-  refetchLastUpdatedCycle: () => any;
+  // refetchLastUpdatedCycle: () => any;
 }
 
 // 模拟数据
@@ -81,7 +81,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   lastUpdatedCycle,
   challenger,
   refetchState,
-  refetchLastUpdatedCycle
+  // refetchLastUpdatedCycle
 }) => {
   const { language } = useLanguage();
   const [selectedSubmission, setSelectedSubmission] = useState<typeof submissions[0] | null>(null);
@@ -134,7 +134,7 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
       await writeContractAsync({
         address, abi, functionName: 'updateCycle'
       })
-      setTimeout(refetchLastUpdatedCycle, 3000)
+      setTimeout(refetchState, 3000)
     } catch (error) {
       console.error('Error submitting blog:', error)
     } finally {
