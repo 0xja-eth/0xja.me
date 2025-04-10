@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAccount, useBalance, useReadContract, useReadContracts, useWriteContract } from 'wagmi';
 import { BLOG_CHALLENGE_ABI } from '@/contracts/BlogChallenge';
 import { DungeonMap } from './DungeonMap';
-import { formatEther, formatUnits, parseEther } from 'ethers';
+import { formatEther, formatUnits } from 'ethers';
 import { useLanguage } from '@/i18n/context';
 import './crystal-slider.css';
 import { addrEq, addrInclude } from '@/utils/address';
@@ -302,7 +302,7 @@ export default function Challenge(props: ChallengeProps) {
                       <span className="text-base text-white">$</span>
                     </div>
                     <span className="text-xl font-bold text-[#26A17B]">
-                      {formatEther(penaltyAmount ?? 0n)}
+                      {formatUnits(penaltyAmount ?? 0n, decimals ?? 6)}
                     </span>
                     <span className="text-xl font-bold text-[#26A17B]/80">USDT</span>
                   </div>

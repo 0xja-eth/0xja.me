@@ -3,7 +3,7 @@ import { useLanguage } from '@/i18n/context';
 import { AnimatePresence, motion } from 'framer-motion'
 import { ContractAddresses, useContract } from '@/contracts';
 import { useAccount, useBalance, useChains, useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
-import { formatUnits, parseEther } from 'ethers/utils';
+import { formatUnits, parseEther, parseUnits } from 'ethers/utils';
 import { ERC20_ABI } from '@/contracts/ERC20';
 import { BLOG_CHALLENGE_ABI } from '@/contracts/BlogChallenge';
 
@@ -99,6 +99,8 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
     address: userAddress,
     token: ContractAddresses[chainId as number].USDT
   })
+  const balanceValue = balance?.value
+  const balanceDecimals = balance?.decimals
 
   const { data: approveAmount } = useReadContract({
     address: challengeAddress,
@@ -117,7 +119,7 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
       date.setHours(0, 0, 0, 0) // 设置为当地时间的0点
 
       const startTime = Math.floor(date.getTime() / 1000)
-      const penaltyAmount = parseEther(data.penaltyAmount)
+      const penaltyAmount = parseUnits(data.penaltyAmount, balanceDecimals)
 
       const txHash = await writeContractAsync({
         address, abi, functionName: 'createChallenge',
@@ -513,7 +515,7 @@ export default function CreateChallengeModal({ isOpen, onClose }: CreateChalleng
                       </div>
                       <div className="flex justify-between text-gray-300">
                         <span className="text-gray-400">{language === 'en' ? 'Your Balance' : '余额'}:</span>
-                        <span>{balance?.value ? formatUnits(balance.value, balance.decimals) : '0'} USDT</span>
+                        <span>{balance ? formatUnits(balanceValue!, balanceDecimals!) : '0'} USDT</span>
                       </div>
                       {/* 如果 testTokenAddress 存在，给一个Mint按钮并给出相应提示：没有测试代币？点击此处进行Mint */}
                       {testTokenAddress && (
