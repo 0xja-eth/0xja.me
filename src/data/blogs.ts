@@ -243,5 +243,28 @@ While working on this, I ran into numerous issues. Ironically, I barely read muc
     tags: ["Git"],
     category: "General",
     blogUrl: "https://www.notion.so/exermon-blog/Git-Repo-17248ee5ba8d8099bd1dffbf68555e92"
+  },  
+  {
+    title: {
+      en: "[Weekly Blog][10k+ words] Cosmos + EVM Blockchain Setup (Part 1)",
+      zh: "【每周博客】【万字长文】Cosmos + EVM 区块链搭建（一）"
+    },
+    slug: "cosmos-evm-blockchain-setup-part-1",
+    description: {
+      en: `# **0x00 Introduction**
+
+If Bitcoin represents Blockchain 1.0 and Ethereum represents Blockchain 2.0, then Cosmos has the potential to become the representative of Blockchain 3.0. The core concept of Cosmos is application chaining -- each application can build its own proprietary blockchain on a unified underlying architecture, with each chain focusing on a specific application. Each chain is focused on a specific application, and at the same time, each chain can be connected to each other to form an Internet of blockchain. This interconnected ecosystem is the blockchain 3.0 that Cosmos aims to build.
+
+Due to project requirements, I recently needed to delve deeper into Cosmos and actually apply it to build multiple blockchains for different scenarios. Therefore, one of the topics of this round of blogging challenge is Cosmos! I will record my experience and study notes on Cosmos in the following blogs, so as to provide some help to other newcomers who are interested in Cosmos~`,
+      zh: `# **0x00 前言**
+
+如果说比特币代表着区块链 1.0，以太坊代表着区块链 2.0，那么 Cosmos 有潜力成为区块链 3.0 的代表。Cosmos 的核心理念是应用链 —— 每个应用都可以在统一的底层架构上构建自己的专属区块链，每条链专注于某个特定应用，同时各链之间可以相互连接，形成一个区块链的互联网。这种互联互通的生态系统，就是 Cosmos 所要构建的区块链 3.0。
+
+由于项目需求，最近需要深入研究 Cosmos，并实际应用它来搭建多条区块链，用于不同的场景。因此，本轮博客挑战其中一个主题就是 Cosmos！我会在后续的博客中记录下我学习 Cosmos 的心得体会和学习笔记，给其他对 Cosmos 感兴趣的新人提供一些帮助~`
+    },
+    date: "2025-04-19",
+    tags: ["Blockchain", "Blog Challenge", "Cosmos", "Ignite"],
+    category: "Blockchain",
+    blogUrl: "https://www.notion.so/exermon-blog/Cosmos-EVM-1d548ee5ba8d806c99efd286a98dcde0"
   }
 ];

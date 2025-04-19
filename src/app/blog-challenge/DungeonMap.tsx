@@ -87,6 +87,8 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   const [selectedSubmission, setSelectedSubmission] = useState<typeof submissions[0] | null>(null);
 
   // submissions = mockSubmissions
+  // currentCycle = 5
+  // lastUpdatedCycle = 3
   
   const { isConnected, chainId, address: userAddress } = useAccount();
   const { writeContractAsync } = useWriteContract();
@@ -98,10 +100,10 @@ export const DungeonMap: React.FC<DungeonMapProps> = ({
   const isChallenger = addrEq(challenger, userAddress || '');
   const isParticipant = addrInclude(participants, userAddress || '');
 
-  // 检查当前周期是否已提交
-  const hasSubmittedCurrentCycle = submissions.some(
-    sub => sub.cycle === Number(currentCycle) && sub.url
-  );
+  // // 检查当前周期是否已提交
+  // const hasSubmittedCurrentCycle = submissions.some(
+  //   sub => sub.cycle === Number(currentCycle) && sub.url
+  // );
 
   // 按周期分组提交记录
   const submissionsByCycle = submissions.reduce((acc, submission) => {
